@@ -1,0 +1,405 @@
+{
+	"info": {
+		"_postman_id": "f516a5b6-78b0-466d-96fb-02221b6d76bb",
+		"name": "Karirak Complete API",
+		"description": "Full API collection for testing all public and admin endpoints on the Karirak job opportunities aggregator & blog platform.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Public Endpoints",
+			"item": [
+				{
+					"name": "Jobs",
+					"item": [
+						{
+							"name": "Get All Jobs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/jobs?country=SA&sector=tech&type=Full-Time",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"jobs"
+									],
+									"query": [
+										{
+											"key": "country",
+											"value": "SA",
+											"description": "Filter by ISO country code (e.g. SA, AE, EG)"
+										},
+										{
+											"key": "sector",
+											"value": "tech",
+											"description": "Filter by job sector slug"
+										},
+										{
+											"key": "type",
+											"value": "Full-Time",
+											"description": "Filter by type (Full-Time, Remote, Part-Time)"
+										}
+									]
+								},
+								"description": "Fetch list of active jobs with optional filtering query parameters."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single Job by Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/jobs/senior-frontend-developer-riyadh",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"jobs",
+										"senior-frontend-developer-riyadh"
+									]
+								},
+								"description": "Fetch detailed information of a single job post using its unique slug."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Posts (Blog)",
+					"item": [
+						{
+							"name": "Get All Blog Posts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts"
+									]
+								},
+								"description": "Fetch latest blog articles and job round-ups."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Single Post by Slug",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/posts/top-10-jobs-gulf-july-2026",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"top-10-jobs-gulf-july-2026"
+									]
+								},
+								"description": "Fetch a specific blog article using its unique URL slug."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "Get All Categories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"categories"
+									]
+								},
+								"description": "Fetch all categories (both sectors and countries) with their job counts."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Subscribe",
+					"item": [
+						{
+							"name": "Subscribe Email to Newsletter",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"jobseeker@example.com\",\n    \"lang_preference\": \"ar\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/subscribe",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"subscribe"
+									]
+								},
+								"description": "Subscribe a user's email for weekly job alerts and newsletter digests."
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin Endpoints (Secure)",
+			"item": [
+				{
+					"name": "Jobs Management",
+					"item": [
+						{
+							"name": "Create a Job Listing",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-admin-key",
+										"value": "{{admin_secret}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title_en\": \"Senior React Developer\",\n    \"title_ar\": \"مطور رياكت أول\",\n    \"description_en\": \"Detailed English description of the React role...\",\n    \"description_ar\": \"تفاصيل متطلبات وظيفة مطور رياكت...\",\n    \"requirements_en\": \"React, Next.js, TypeScript\",\n    \"requirements_ar\": \"خبرة في رياكت، نيكست جي اس، وتايب سكريبت\",\n    \"company_name\": \"Apex MENA\",\n    \"company_logo_url\": \"https://example.com/logo.png\",\n    \"link\": \"https://apex-mena.example.com/apply/1024\",\n    \"location_country\": \"SA\",\n    \"location_city\": \"Riyadh\",\n    \"job_type\": \"Full-Time\",\n    \"salary_range\": \"15,000 - 18,000 SAR\",\n    \"category_ids\": [],\n    \"is_featured\": true,\n    \"status\": \"active\",\n    \"expires_at\": \"2026-08-30T00:00:00.000Z\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/jobs",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"jobs"
+									]
+								},
+								"description": "Create a new job listing. Protected by admin key."
+							},
+							"response": []
+						},
+						{
+							"name": "Update a Job Listing",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "x-admin-key",
+										"value": "{{admin_secret}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"64b2d18471fc24ab7423d240\",\n    \"updates\": {\n        \"salary_range\": \"16,000 - 19,000 SAR\",\n        \"is_featured\": false\n    }\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/jobs",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"jobs"
+									]
+								},
+								"description": "Modify parameters of an existing job by passing its database ID."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a Job Listing",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "x-admin-key",
+										"value": "{{admin_secret}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"64b2d18471fc24ab7423d240\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/jobs",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"jobs"
+									]
+								},
+								"description": "Delete a job post by its database ID."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Posts Management",
+					"item": [
+						{
+							"name": "Create a Blog Post",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-admin-key",
+										"value": "{{admin_secret}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title_en\": \"Top 10 Remote Jobs in KSA for July 2026\",\n    \"title_ar\": \"أفضل 10 وظائف عن بعد في السعودية لشهر يوليو 2026\",\n    \"content_en\": \"# Remote jobs are growing...\",\n    \"content_ar\": \"# الوظائف عن بعد في ازدياد مستمر...\",\n    \"excerpt_en\": \"Here is a round-up of the best remote jobs hiring this week.\",\n    \"excerpt_ar\": \"إليك قائمة بأفضل الوظائف الشاغرة عن بعد لهذا الأسبوع.\",\n    \"cover_image_url\": \"https://example.com/cover.png\",\n    \"keywords\": \"KSA jobs, remote jobs, وظائف السعودية, عمل عن بعد\",\n    \"category_id\": \"64b2d18471fc24ab7423d211\",\n    \"related_job_ids\": [],\n    \"status\": \"published\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/posts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"posts"
+									]
+								},
+								"description": "Publish a new career advice article or job round-up blog post."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Email Digest Management",
+					"item": [
+						{
+							"name": "Trigger Weekly Email Campaign",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-admin-key",
+										"value": "{{admin_secret}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"subject_en\": \"Weekly Curated Jobs Digest\",\n    \"subject_ar\": \"نشرة الوظائف الأسبوعية المنسقة\",\n    \"job_ids\": [\n        \"64b2d18471fc24ab7423d240\"\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/admin/digest",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"digest"
+									]
+								},
+								"description": "Trigger sending the weekly job roundup digest to all active subscribers via Resend."
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "admin_secret",
+			"value": "my_super_secret_admin_key_123",
+			"type": "string"
+		}
+	]
+}
