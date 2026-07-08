@@ -15,10 +15,13 @@ export default async function PostDetailPage({ params }: PageProps) {
   const { slug } = await params;
   await connectDB();
 
-  // Find post by slug or ID
-  const post = await Post.findOne({
-    $or: [{ slug }, { _id: slug.length === 24 ? slug : undefined }]
-  }).lean();
+  // Find post by slug or ID safely
+  const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(slug);
+  const post = await Post.findOne(
+    isValidObjectId
+      ? { $or: [{ slug }, { _id: slug }] }
+      : { slug }
+  ).lean();
 
   if (!post) {
     notFound();

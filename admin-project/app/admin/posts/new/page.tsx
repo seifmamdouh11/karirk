@@ -94,37 +94,37 @@ export default function AddPostPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         
         {/* Breadcrumbs */}
-        <nav className="flex items-center text-sm font-medium text-zinc-500 space-x-2">
+        <nav className="flex items-center text-xs font-semibold text-zinc-400 space-x-2.5 uppercase tracking-wider">
           <Link href="/admin/manage" className="hover:text-indigo-600 transition-colors flex items-center gap-1.5">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
             </svg>
             Dashboard
           </Link>
-          <svg className="w-4 h-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-3.5 h-3.5 text-zinc-300 animate-in fade-in" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <span className="text-zinc-900">Write Article</span>
+          <span className="text-zinc-700">Write Article</span>
         </nav>
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 flex items-center gap-3">
-              <div className="p-2.5 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-600/20">
-                <PenSquare className="w-6 h-6" />
-              </div>
-              Write New Article
-            </h1>
-            <p className="mt-2 text-zinc-500">Publish professional insights and career advice directly to the platform.</p>
+          <div className="flex items-center gap-4">
+            <div className="p-3.5 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl text-white shadow-lg shadow-indigo-600/20">
+              <PenSquare className="w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-black tracking-tight text-zinc-900">Write New Article</h1>
+              <p className="text-xs font-medium text-zinc-500 mt-0.5 font-sans">Publish professional insights and career advice directly to the platform.</p>
+            </div>
           </div>
           <Link 
             href="/admin/import" 
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-4 py-2 rounded-lg transition-colors inline-flex items-center"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-all border border-indigo-100/50"
           >
             Go to Job Importer &rarr;
           </Link>

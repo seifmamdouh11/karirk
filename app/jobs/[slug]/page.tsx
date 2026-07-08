@@ -15,10 +15,13 @@ export default async function JobDetailPage({ params }: PageProps) {
   const { slug } = await params;
   await connectDB();
 
-  // Find job by slug or ID
-  const job = await Job.findOne({
-    $or: [{ slug }, { _id: slug.length === 24 ? slug : undefined }]
-  }).lean();
+  // Find job by slug or ID safely
+  const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(slug);
+  const job = await Job.findOne(
+    isValidObjectId
+      ? { $or: [{ slug }, { _id: slug }] }
+      : { slug }
+  ).lean();
 
   if (!job) {
     notFound();

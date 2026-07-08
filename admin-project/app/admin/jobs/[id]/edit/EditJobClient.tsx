@@ -94,7 +94,7 @@ export default function EditJobClient({ initialJob }: { initialJob: any }) {
   ]);
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         
         {/* Header */}
