@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import connectDB from "@/lib/mongodb";
 import Job from "@/models/Job";
 import Link from "next/link";
@@ -8,6 +8,8 @@ import { notFound } from "next/navigation";
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function JobDetailPage({ params }: PageProps) {
   const { slug } = await params;

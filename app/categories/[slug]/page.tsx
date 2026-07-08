@@ -9,10 +9,14 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   await connectDB();
-  const categoryDoc = await Category.findOne({ slug }).lean();
+  const categoryDoc = await Category.findOne({
+    $or: [{ slug }, { _id: slug.length === 24 ? slug : undefined }]
+  }).lean();
   
   if (!categoryDoc) {
     return { title: "Category Not Found - Karirak" };
@@ -28,7 +32,9 @@ export default async function CategoryDetailPage({ params }: PageProps) {
   const { slug } = await params;
   await connectDB();
 
-  const categoryDoc = await Category.findOne({ slug }).lean();
+  const categoryDoc = await Category.findOne({
+    $or: [{ slug }, { _id: slug.length === 24 ? slug : undefined }]
+  }).lean();
   if (!categoryDoc) {
     notFound();
   }

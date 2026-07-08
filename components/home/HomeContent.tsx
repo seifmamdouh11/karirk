@@ -49,7 +49,7 @@ export default function HomeContent({
           {parentCategories.map((cat: any) => (
             <Link 
               key={cat._id.toString()} 
-              href={`/categories/${cat.slug}`}
+              href={`/categories/${cat.slug || cat._id}`}
               className="group relative flex items-center justify-between p-6 bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:border-indigo-500/50 dark:hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300"
             >
               <span className="text-lg font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">

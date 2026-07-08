@@ -7,6 +7,8 @@ import Hero from "@/components/home/Hero";
 import HomeContent from "@/components/home/HomeContent";
 
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   await connectDB();
 

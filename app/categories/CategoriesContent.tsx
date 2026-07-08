@@ -48,7 +48,7 @@ export default function CategoriesContent({ categories }: { categories: any[] })
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <Link 
-                href={`/categories/${cat.slug}`}
+                href={`/categories/${cat.slug || cat._id}`}
                 className="relative p-6 lg:p-8 flex items-center justify-between bg-gradient-to-br from-zinc-50 to-white dark:from-zinc-900 dark:to-zinc-800/50 hover:bg-indigo-50/50 dark:hover:bg-indigo-500/5 transition-colors overflow-hidden"
               >
                 {/* Background glow on hover */}
@@ -73,7 +73,7 @@ export default function CategoriesContent({ categories }: { categories: any[] })
                     {cat.subcategories.map((sub: any) => (
                       <Link 
                         key={sub._id}
-                        href={`/categories/${sub.slug}`}
+                        href={`/categories/${sub.slug || sub._id}`}
                         className="inline-flex items-center px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800/80 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
                       >
                         {sub.name}
