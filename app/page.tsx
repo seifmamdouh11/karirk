@@ -5,7 +5,7 @@ import Job from "@/models/Job";
 import Post from "@/models/Post";
 import Hero from "@/components/home/Hero";
 import HomeContent from "@/components/home/HomeContent";
-import SubscribeBanner from "@/components/home/SubscribeBanner";
+
 
 export default async function Home() {
   await connectDB();
