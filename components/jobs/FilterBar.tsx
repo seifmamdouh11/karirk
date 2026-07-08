@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Search, MapPin, Briefcase, Grid, X, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { Search, X, SlidersHorizontal, MapPin, Briefcase, Filter } from "lucide-react";
 
 interface FilterBarProps {
   filters: {
@@ -18,13 +18,8 @@ interface FilterBarProps {
 export default function FilterBar({ filters, onChange }: FilterBarProps) {
   const [categories, setCategories] = useState<any[]>([]);
   const [loadingCats, setLoadingCats] = useState(true);
-  const { locale, t } = useLanguage();
+  const { t } = useLanguage();
 
-  const getCategoryName = (name: string) => {
-    return name;
-  };
-
-  // Common Gulf/Arab countries from our taxonomy & seeds
   const countries = [
     { name: t("jobs.egypt"), value: "Egypt" },
     { name: t("jobs.saudiarabia"), value: "Saudi Arabia" },
@@ -69,231 +64,166 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
     onChange({ q: "", category: "", type: "", country: "" });
   };
 
-  const hasActiveFilters = filters.q || filters.category || filters.type || filters.country;
+  const activeFilterCount = Object.values(filters).filter(val => val !== "").length;
 
   return (
-    <div className="w-full bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-7 shadow-lg shadow-zinc-100/50 dark:shadow-none flex flex-col gap-6 transition-all duration-300">
-
-      {/* Search Bar Input Container */}
-      <div className="relative group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400 group-focus-within:text-blue-500 transition-colors" />
+    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-xl shadow-zinc-200/20 dark:shadow-black/20">
+      
+      {/* Search Input */}
+      <div className="relative mb-6">
+        <Search className="absolute top-1/2 -translate-y-1/2 start-4 w-5 h-5 text-zinc-400" />
         <input
           type="text"
           value={filters.q}
           onChange={handleTextChange}
           placeholder={t("jobs.searchPlaceholder")}
-          className="w-full pl-12 pr-12 py-3.5 bg-zinc-50 dark:bg-zinc-850/40 border border-zinc-200/85 dark:border-zinc-800/60 rounded-2xl text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-blue-500/5 transition-all duration-200 shadow-inner"
+          className="w-full ps-12 pe-4 py-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-500 font-medium"
         />
         {filters.q && (
-          <button
+          <button 
             onClick={() => handleSelectChange("q", "")}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 rounded-xl text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-all"
-            type="button"
-            aria-label="Clear search"
+            className="absolute top-1/2 -translate-y-1/2 end-4 p-1 rounded-full text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         )}
       </div>
 
-      {/* Quick Filter Pills */}
-      <div className="flex flex-wrap items-center gap-2 -mt-2">
-        <span className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mr-1.5">
-          {t("home.popularSearch")}
-        </span>
+      {/* Quick Filters */}
+      <div className="flex flex-wrap items-center gap-2 mb-6">
+        <div className="flex items-center gap-2 text-sm font-medium text-zinc-500 dark:text-zinc-400 me-2">
+          <SlidersHorizontal className="w-4 h-4" />
+          <span>{t("jobs.quickFilters") || "Quick Filters"}</span>
+        </div>
+        
         <button
           onClick={() => handleSelectChange("type", filters.type === "remote" ? "" : "remote")}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 ${filters.type === "remote"
-              ? "bg-gradient-to-r from-blue-600 to-indigo-600 border-transparent text-white shadow-md shadow-blue-500/20"
-              : "bg-zinc-50 dark:bg-zinc-850/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
-            }`}
-          type="button"
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            filters.type === "remote" 
+              ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20" 
+              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          }`}
         >
           {t("jobs.remoteOnly")}
         </button>
+        
         <button
           onClick={() => handleSelectChange("country", filters.country === "Saudi Arabia" ? "" : "Saudi Arabia")}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 ${filters.country === "Saudi Arabia"
-              ? "bg-gradient-to-r from-blue-600 to-indigo-600 border-transparent text-white shadow-md shadow-blue-500/20"
-              : "bg-zinc-50 dark:bg-zinc-850/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
-            }`}
-          type="button"
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            filters.country === "Saudi Arabia" 
+              ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20" 
+              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          }`}
         >
           {t("jobs.saudiArabiaBadge")}
         </button>
+        
         <button
           onClick={() => handleSelectChange("country", filters.country === "United Arab Emirates" ? "" : "United Arab Emirates")}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 ${filters.country === "United Arab Emirates"
-              ? "bg-gradient-to-r from-blue-600 to-indigo-600 border-transparent text-white shadow-md shadow-blue-500/20"
-              : "bg-zinc-50 dark:bg-zinc-850/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
-            }`}
-          type="button"
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            filters.country === "United Arab Emirates" 
+              ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20" 
+              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          }`}
         >
           {t("jobs.uaeBadge")}
         </button>
-        <button
-          onClick={() => handleSelectChange("category", filters.category === "technology" ? "" : "technology")}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 ${filters.category === "technology"
-              ? "bg-gradient-to-r from-blue-600 to-indigo-600 border-transparent text-white shadow-md shadow-blue-500/20"
-              : "bg-zinc-50 dark:bg-zinc-850/40 border-zinc-200 dark:border-zinc-800/60 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/50"
-            }`}
-          type="button"
-        >
-          {t("nav.tech")}
-        </button>
       </div>
 
-      {/* Grid of Dropdowns */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Category Dropdown */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+      {/* Select Filters */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <div className="space-y-1.5">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 ms-1">
+            <Filter className="w-4 h-4 text-zinc-400" />
             {t("jobs.industryLabel")}
           </label>
-          <div className="relative group">
-            <Grid className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400 pointer-events-none group-focus-within:text-blue-500 transition-colors" />
+          <div className="relative">
             <select
               value={filters.category}
               onChange={(e) => handleSelectChange("category", e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-zinc-50 dark:bg-zinc-850/30 border border-zinc-200 dark:border-zinc-800/60 rounded-xl text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-blue-500/5 transition-all appearance-none cursor-pointer"
+              className="w-full appearance-none px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-zinc-700 dark:text-zinc-300 font-medium outline-none transition-colors"
             >
               <option value="">{t("jobs.allCategories")}</option>
               {loadingCats ? (
                 <option disabled>Loading...</option>
               ) : (
                 categories.map((parent: any) => (
-                  <optgroup key={parent._id} label={getCategoryName(parent.name)} className="bg-white dark:bg-zinc-900">
-                    <option value={parent.slug}>{getCategoryName(parent.name)} (All)</option>
+                  <optgroup key={parent._id} label={parent.name}>
+                    <option value={parent.slug}>{parent.name} (All)</option>
                     {parent.subcategories?.map((sub: any) => (
                       <option key={sub._id} value={sub.slug}>
-                        {getCategoryName(sub.name)}
+                        {sub.name}
                       </option>
                     ))}
                   </optgroup>
                 ))
               )}
             </select>
-            <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none transition-transform group-focus-within:rotate-180" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center px-4 text-zinc-400">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
           </div>
         </div>
 
-        {/* Job Type Dropdown */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <div className="space-y-1.5">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 ms-1">
+            <Briefcase className="w-4 h-4 text-zinc-400" />
             {t("jobs.typeLabel")}
           </label>
-          <div className="relative group">
-            <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400 pointer-events-none group-focus-within:text-blue-500 transition-colors" />
+          <div className="relative">
             <select
               value={filters.type}
               onChange={(e) => handleSelectChange("type", e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-zinc-50 dark:bg-zinc-850/30 border border-zinc-200 dark:border-zinc-800/60 rounded-xl text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-blue-500/5 transition-all appearance-none cursor-pointer"
+              className="w-full appearance-none px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-zinc-700 dark:text-zinc-300 font-medium outline-none transition-colors"
             >
               <option value="">{t("jobs.allTypes")}</option>
               {jobTypes.map((type) => (
-                <option key={type.value} value={type.value} className="bg-white dark:bg-zinc-900">
+                <option key={type.value} value={type.value}>
                   {type.name}
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none transition-transform group-focus-within:rotate-180" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center px-4 text-zinc-400">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
           </div>
         </div>
 
-        {/* Country Dropdown */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <div className="space-y-1.5">
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300 ms-1">
+            <MapPin className="w-4 h-4 text-zinc-400" />
             {t("jobs.locationLabel")}
           </label>
-          <div className="relative group">
-            <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-zinc-400 pointer-events-none group-focus-within:text-blue-500 transition-colors" />
+          <div className="relative">
             <select
               value={filters.country}
               onChange={(e) => handleSelectChange("country", e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-zinc-50 dark:bg-zinc-850/30 border border-zinc-200 dark:border-zinc-800/60 rounded-xl text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-blue-500/5 transition-all appearance-none cursor-pointer"
+              className="w-full appearance-none px-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-zinc-700 dark:text-zinc-300 font-medium outline-none transition-colors"
             >
               <option value="">{t("jobs.allLocations")}</option>
               {countries.map((country) => (
-                <option key={country.value} value={country.value} className="bg-white dark:bg-zinc-900">
+                <option key={country.value} value={country.value}>
                   {country.name}
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none transition-transform group-focus-within:rotate-180" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center px-4 text-zinc-400">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Active Filter Badges & Clear Filters */}
-      {hasActiveFilters && (
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-zinc-100 dark:border-zinc-800/50">
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mr-1.5">
-              {t("jobs.activeFilters")}:
-            </span>
-
-            {filters.q && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-955/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30 animate-in zoom-in-95 duration-200">
-                &ldquo;{filters.q}&rdquo;
-                <button
-                  onClick={() => handleSelectChange("q", "")}
-                  className="hover:bg-blue-100 dark:hover:bg-blue-900/40 p-0.5 rounded-lg transition-colors"
-                  aria-label="Remove search query"
-                  type="button"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            )}
-
-            {filters.category && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-955/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30 capitalize animate-in zoom-in-95 duration-200">
-                {t("jobs.categoryFilter")}: {getCategoryName(filters.category.replace("-", " "))}
-                <button
-                  onClick={() => handleSelectChange("category", "")}
-                  className="hover:bg-blue-100 dark:hover:bg-blue-900/40 p-0.5 rounded-lg transition-colors"
-                  aria-label="Remove category filter"
-                  type="button"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            )}
-
-            {filters.type && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-955/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30 capitalize animate-in zoom-in-95 duration-200">
-                {t("jobs.typeFilter")}: {filters.type.replace("-", " ")}
-                <button
-                  onClick={() => handleSelectChange("type", "")}
-                  className="hover:bg-blue-100 dark:hover:bg-blue-900/40 p-0.5 rounded-lg transition-colors"
-                  aria-label="Remove job type filter"
-                  type="button"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            )}
-
-            {filters.country && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-955/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/30 animate-in zoom-in-95 duration-200">
-                {t("jobs.countryFilter")}: {t(`jobs.${filters.country.toLowerCase().replace(/ /g, "")}`) || filters.country}
-                <button
-                  onClick={() => handleSelectChange("country", "")}
-                  className="hover:bg-blue-100 dark:hover:bg-blue-900/40 p-0.5 rounded-lg transition-colors"
-                  aria-label="Remove location filter"
-                  type="button"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            )}
-          </div>
-
-          <button
-            onClick={clearFilters}
-            className="text-xs font-bold text-zinc-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-955/20 px-3 py-1.5 rounded-xl transition-all"
+      {/* Clear Filters */}
+      {activeFilterCount > 0 && (
+        <div className="mt-6 flex justify-end">
+          <button 
+            onClick={clearFilters} 
             type="button"
+            className="flex items-center gap-1.5 text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 px-4 py-2 rounded-xl transition-colors"
           >
+            <X className="w-4 h-4" />
             {t("jobs.clearAll")}
           </button>
         </div>

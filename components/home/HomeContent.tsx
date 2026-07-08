@@ -2,10 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { Grid, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
 import FeaturedJobs from "./FeaturedJobs";
 import LatestPosts from "./LatestPosts";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 interface HomeContentProps {
   parentCategories: any[];
@@ -19,110 +19,109 @@ export default function HomeContent({
   serializedPosts,
 }: HomeContentProps) {
   const { locale, t } = useLanguage();
+  const isRtl = locale === "ar";
+  const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-32">
       
-      {/* 2. Category Quick Strip */}
+      {/* Categories / Explore Industries Section */}
       <section className="w-full">
-        <div className="flex items-center gap-2 mb-4 text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-          <Grid className="w-3.5 h-3.5" />
-          <span>{t("home.categoriesTitle")}</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mb-3">
+              {t("home.categoriesTitle")}
+            </h2>
+            <p className="text-zinc-500 dark:text-zinc-400 text-lg">
+              {isRtl ? "اكتشف الفرص المهنية في أبرز القطاعات" : "Discover career opportunities across top sectors"}
+            </p>
+          </div>
+          <Link 
+            href="/categories" 
+            className="group flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-medium hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
+          >
+            <span>{isRtl ? "عرض كل المجالات" : "View all industries"}</span>
+            <ArrowIcon className="w-4 h-4 transform group-hover:scale-110 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
+          </Link>
         </div>
-        <div className="flex items-center gap-3 overflow-x-auto pb-3 scrollbar-thin scroll-smooth">
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {parentCategories.map((cat: any) => (
-            <Link
-              key={cat._id.toString()}
+            <Link 
+              key={cat._id.toString()} 
               href={`/categories/${cat.slug}`}
-              className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-2xl bg-white border border-blue-100 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-100 text-sm font-semibold text-blue-900 transition-all duration-200"
+              className="group relative flex items-center justify-between p-6 bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:border-indigo-500/50 dark:hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300"
             >
-              <span>{cat.name}</span>
+              <span className="text-lg font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                {cat.name}
+              </span>
+              <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-500/10 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <ArrowIcon className="w-5 h-5 transform group-hover:scale-110 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-all" />
+              </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* 3. Main Content Grid (Two-Column: Left Main Content / Right Sidebar Ads & Info) */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-        {/* Main Area (8 Columns) */}
-        <div className="lg:col-span-8 flex flex-col gap-12">
-
-          {/* Featured Jobs */}
+      {/* Main Content (Jobs, Posts, Sidebar) */}
+      <section className="flex flex-col lg:flex-row gap-12">
+        <div className="flex-1 space-y-24">
           <FeaturedJobs jobs={serializedJobs} />
-
-          {/* Latest Articles */}
           <LatestPosts posts={serializedPosts} />
-
         </div>
 
-        {/* Sidebar Area (4 Columns) */}
-        <aside className="lg:col-span-4 flex flex-col gap-8">
-
-          {/* AD ZONE B (Skyscraper Banner) */}
-          <div className="w-full rounded-2xl bg-blue-50 border border-blue-100 p-6 flex flex-col justify-between min-h-[350px] relative overflow-hidden">
-            <span className="absolute top-3 start-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+        <aside className="w-full lg:w-[380px] shrink-0 space-y-8">
+          <div>
+            <span>
               {locale === "ar" ? "إعلان / ممول" : "Sponsored / AD"}
             </span>
-
-            <div className="mt-6">
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-bold mb-3">
-                {locale === "ar" ? "شريك متميز" : "Featured Partner"}
+            <div>
+              <div>
+                {locale === "ar" ? "شريك مميز" : "Featured Partner"}
               </div>
-              <h3 className="text-lg font-bold text-zinc-950 dark:text-white leading-snug">
-                {locale === "ar" 
-                  ? "سرّع عملية بحثك عن عمل مع خدمة العروض المميزة" 
-                  : "Accelerate Your Search with Premium Placements"
-                }
-              </h3>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 leading-relaxed">
+              <h3>
                 {locale === "ar"
-                  ? "قم بإرسال سيرتك الذاتية مباشرة لمدراء التوظيف والموارد البشرية في السعودية والإمارات."
-                  : "Get your CV pushed directly to top recruiters and HR managers in Saudi Arabia and the UAE."
-                }
+                  ? "سرّع رحلة بحثك عن عمل مع العروض المميزة"
+                  : "Accelerate Your Search with Premium Placements"}
+              </h3>
+              <p>
+                {locale === "ar"
+                  ? "أرسل سيرتك الذاتية مباشرة إلى مسؤولي التوظيف والموارد البشرية في السعودية والإمارات."
+                  : "Get your CV pushed directly to top recruiters and HR managers in Saudi Arabia and the UAE."}
               </p>
             </div>
-
-            <div className="mt-8 flex flex-col gap-2">
-              <a
-                href="#"
-                className="flex items-center justify-center gap-1.5 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all"
-              >
-                <span>{locale === "ar" ? "أنشئ حساباً مميزاً" : "Build Premium Profile"}</span>
-                <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+            <div>
+              <a href="#">
+                <span>{locale === "ar" ? "أنشئ حسابا مميزا" : "Build Premium Profile"}</span>
               </a>
             </div>
           </div>
 
-          {/* Platform Stats Widget */}
-          <div className="w-full rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 p-6">
-            <h3 className="text-sm font-bold text-zinc-950 dark:text-white uppercase tracking-wider mb-4">
-              {t("footer.explore")}
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-3 bg-blue-50 rounded-xl">
-                <span className="block text-2xl font-extrabold text-blue-700">12K+</span>
-                <span className="text-[10px] font-semibold text-blue-500 uppercase">{t("home.statsTalents")}</span>
+          <div>
+            <h3>{t("footer.explore")}</h3>
+            <div>
+              <div>
+                <span>12K+</span>
+                <span>{t("home.statsTalents")}</span>
               </div>
-              <div className="p-3 bg-blue-50 rounded-xl">
-                <span className="block text-2xl font-extrabold text-blue-700">450+</span>
-                <span className="text-[10px] font-semibold text-blue-500 uppercase">{t("home.statsCompanies")}</span>
+              <div>
+                <span>450+</span>
+                <span>{t("home.statsCompanies")}</span>
               </div>
-              <div className="p-3 bg-blue-50 rounded-xl">
-                <span className="block text-2xl font-extrabold text-blue-700">890+</span>
-                <span className="text-[10px] font-semibold text-blue-500 uppercase">{t("home.statsJobs")}</span>
+              <div>
+                <span>890+</span>
+                <span>{t("home.statsJobs")}</span>
               </div>
-              <div className="p-3 bg-blue-50 rounded-xl">
-                <span className="block text-2xl font-extrabold text-blue-700">99.2%</span>
-                <span className="text-[10px] font-semibold text-blue-500 uppercase">{locale === "ar" ? "نسبة التوافق" : "Match Quality"}</span>
+              <div>
+                <span>99.2%</span>
+                <span>
+                  {locale === "ar" ? "جودة التوافق" : "Match Quality"}
+                </span>
               </div>
             </div>
           </div>
-
         </aside>
-
       </section>
-
     </div>
   );
 }

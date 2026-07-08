@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import connectDB from "@/lib/mongodb";
 import Job from "@/models/Job";
 import Link from "next/link";
@@ -89,7 +89,7 @@ export default async function JobDetailPage({ params }: PageProps) {
         </div>
 
         {/* Stats strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 px-5 bg-zinc-50 dark:bg-zinc-850/50 rounded-2xl text-xs text-zinc-650 dark:text-zinc-350">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 px-5 bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl text-xs text-zinc-600 dark:text-zinc-300">
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4 text-zinc-400" />
             <span>{job.location}</span>
@@ -121,7 +121,7 @@ export default async function JobDetailPage({ params }: PageProps) {
           <h3 className="text-lg font-bold text-zinc-950 dark:text-white">
             Job Description & Requirements
           </h3>
-          <div className="text-sm text-zinc-650 dark:text-zinc-350 leading-relaxed space-y-4 whitespace-pre-line">
+          <div className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed space-y-4 whitespace-pre-line">
             {job.description}
           </div>
         </div>
@@ -129,3 +129,4 @@ export default async function JobDetailPage({ params }: PageProps) {
     </div>
   );
 }
+

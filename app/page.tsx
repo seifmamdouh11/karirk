@@ -20,20 +20,21 @@ export default async function Home() {
 
   const serializedJobs = JSON.parse(JSON.stringify(featuredJobs));
   const serializedPosts = JSON.parse(JSON.stringify(posts));
+  const serializedParentCategories = JSON.parse(JSON.stringify(parentCategories));
 
   return (
-    <main className="flex flex-col gap-8 w-full">
+    <main>
       <Hero />
 
-      <div className="w-full">
+      <div>
         <HomeContent
-          parentCategories={parentCategories}
+          parentCategories={serializedParentCategories}
           serializedJobs={serializedJobs}
           serializedPosts={serializedPosts}
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div>
         <SubscribeBanner />
       </div>
     </main>

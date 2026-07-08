@@ -1,6 +1,7 @@
 {
   "nav": {
     "brand": "Karirak",
+    "home": "Home",
     "jobs": "Jobs",
     "categories": "Categories",
     "posts": "Articles",
@@ -109,6 +110,10 @@
     "back": "Back to Insights",
     "all": "All",
     "loading": "Searching insights..."
+  },
+  "categories": {
+    "noJobsTitle": "No Jobs in this Category",
+    "noJobsDesc": "There are currently no open positions listed under this category. Check back later or explore other career options."
   },
   "about": {
     "title": "About Karirak",

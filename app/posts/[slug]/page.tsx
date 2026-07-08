@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
 import Link from "next/link";
@@ -68,7 +68,7 @@ export default async function PostDetailPage({ params }: PageProps) {
         </div>
 
         {/* Article Body Content */}
-        <div className="mt-4 flex flex-col gap-6 text-zinc-655 dark:text-zinc-350 leading-relaxed text-base whitespace-pre-line">
+        <div className="mt-4 flex flex-col gap-6 text-zinc-600 dark:text-zinc-300 leading-relaxed text-base whitespace-pre-line">
           {/* Main article content - using description since it's the main field on the Post model */}
           {post.description}
         </div>
@@ -85,3 +85,4 @@ export default async function PostDetailPage({ params }: PageProps) {
     </div>
   );
 }
+

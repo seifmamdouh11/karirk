@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, MapPin, Sparkles } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { Search, MapPin, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
   const [keyword, setKeyword] = useState("");
@@ -18,90 +19,104 @@ export default function Hero() {
     { name: "مهندس برمجيات", slug: "software-engineer" },
     { name: "مصمم منتجات", slug: "product-designer" },
     { name: "مسوق رقمي", slug: "digital-marketing" },
-    { name: "محاسب", slug: "accounting" }
+    { name: "محاسب", slug: "accounting" },
   ] : [
     { name: "Software Engineer", slug: "software-engineer" },
     { name: "Product Designer", slug: "product-designer" },
     { name: "Digital Marketer", slug: "digital-marketing" },
-    { name: "Accountant", slug: "accounting" }
+    { name: "Accountant", slug: "accounting" },
   ];
 
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-b from-blue-50/50 via-white to-zinc-50 dark:from-zinc-950/20 dark:via-zinc-950 dark:to-zinc-950 border-b border-zinc-200/50 dark:border-zinc-800/40 py-20 lg:py-28 px-4 sm:px-6 lg:px-8">
-      {/* Background decoration blur */}
-      <div className="absolute top-[-20%] start-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/10 rounded-full blur-3xl -z-10 animate-pulse duration-[6000ms]"></div>
-      <div className="absolute bottom-[-10%] end-[-5%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+    <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden bg-white dark:bg-zinc-950">
+      
+      {/* Background Square Pattern */}
+      <div 
+        className="absolute inset-0 -z-10 h-full w-full opacity-[0.15] dark:opacity-[0.05]"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #808080 1px, transparent 1px),
+            linear-gradient(to bottom, #808080 1px, transparent 1px)
+          `,
+          backgroundSize: '32px 32px',
+          maskImage: 'radial-gradient(ellipse 80% 80% at 50% 0%, #000 60%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 0%, #000 60%, transparent 100%)'
+        }}
+      />
 
-      <div className="max-w-5xl mx-auto flex flex-col items-center text-center">
-        {/* Banner highlight */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-6 animate-fade-in">
-          <Sparkles className="w-3.5 h-3.5" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center text-center relative z-10">
+        
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-sm font-medium mb-8 border border-indigo-100 dark:border-indigo-500/20 shadow-sm backdrop-blur-md">
+          <Sparkles className="w-4 h-4" />
           <span>{t("home.heroBadge")}</span>
         </div>
 
-        {/* Title */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-700 dark:from-white dark:via-zinc-100 dark:to-zinc-400 max-w-3xl leading-[1.15] sm:leading-[1.1] mb-6">
+        {/* Hero Title */}
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6 max-w-4xl leading-[1.15]">
           {t("home.heroTitleStart")}
-          <span className="text-blue-600 dark:text-blue-400">{t("home.heroTitleHighlight")}</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-violet-500 mx-2">
+            {t("home.heroTitleHighlight")}
+          </span>
           {t("home.heroTitleEnd")}
         </h1>
 
-        {/* Subtitle */}
-        <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl mb-10 font-medium">
+        {/* Hero Subtitle */}
+        <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 mb-12 max-w-2xl leading-relaxed">
           {t("home.heroSubtitle")}
         </p>
 
-        {/* Search Bar Form */}
-        <form
-          onSubmit={handleSearch}
-          className="w-full max-w-4xl bg-white/95 dark:bg-zinc-950/95 border border-zinc-200/80 dark:border-zinc-800/80 rounded-4xl shadow-[0_35px_80px_-50px_rgba(15,23,42,0.2)] backdrop-blur-xl p-2.5 sm:p-3 flex flex-col md:flex-row items-stretch gap-2.5"
+        {/* Search Form */}
+        <form 
+          onSubmit={handleSearch} 
+          className="relative flex flex-col md:flex-row items-center w-full max-w-4xl mx-auto bg-white dark:bg-zinc-900/60 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 rounded-3xl md:rounded-full shadow-2xl dark:shadow-black/50 p-2 gap-2"
         >
-          {/* Keyword Search */}
-          <div className="flex-1 flex items-center gap-2.5 px-3 min-w-0 border-b md:border-b-0 md:border-e border-zinc-100 dark:border-zinc-800 pb-2 md:pb-0">
+          <div className="flex items-center w-full md:w-1/2 px-4 py-3 md:py-0 border-b md:border-b-0 md:border-r border-zinc-100 dark:border-zinc-800 transition-colors focus-within:bg-zinc-50 dark:focus-within:bg-zinc-800/50 rounded-2xl md:rounded-l-full md:rounded-r-none">
             <Search className="w-5 h-5 text-zinc-400 shrink-0" />
             <input
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder={t("jobs.searchPlaceholder")}
-              className="bg-transparent border-0 text-sm w-full py-2.5 focus:ring-0 focus:outline-none text-zinc-900 dark:text-white placeholder-zinc-400"
+              className="w-full bg-transparent border-none outline-none focus:ring-0 px-3 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-medium"
             />
           </div>
 
-          {/* Location Search */}
-          <div className="flex-1 flex items-center gap-2.5 px-3 min-w-0 pb-2 md:pb-0">
+          <div className="flex items-center w-full md:w-1/2 px-4 py-3 md:py-0 transition-colors focus-within:bg-zinc-50 dark:focus-within:bg-zinc-800/50 rounded-2xl md:rounded-none">
             <MapPin className="w-5 h-5 text-zinc-400 shrink-0" />
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder={locale === "ar" ? "المدينة، الدولة، أو عمل عن بعد..." : "City, country, or Remote..."}
-              className="bg-transparent border-0 text-sm w-full py-2.5 focus:ring-0 focus:outline-none text-zinc-900 dark:text-white placeholder-zinc-400"
+              className="w-full bg-transparent border-none outline-none focus:ring-0 px-3 text-zinc-900 dark:text-white placeholder:text-zinc-500 font-medium"
             />
           </div>
 
-          {/* Submit CTA */}
-          <button
-            type="submit"
-            className="flex items-center justify-center px-8 py-3.5 bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-blue-500/20 active:scale-98 transition-all duration-200 shrink-0"
+          <button 
+            type="submit" 
+            className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-2xl md:rounded-full font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 shrink-0"
           >
             {t("home.searchBtn")}
           </button>
         </form>
 
-        {/* Popular Tags */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 mt-6 text-xs text-blue-700">
-          <span className="font-semibold">{t("home.popularSearch")}</span>
-          {popularSearches.map((tag) => (
-            <a
-              key={tag.slug}
-              href={`/jobs?q=${encodeURIComponent(tag.name)}`}
-              className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-100 transition-colors"
-            >
-              {tag.name}
-            </a>
-          ))}
+        {/* Popular Searches */}
+        <div className="mt-10 flex flex-col md:flex-row items-center gap-4 text-sm">
+          <span className="text-zinc-500 dark:text-zinc-400 font-medium">{t("home.popularSearch")}</span>
+          <div className="flex flex-wrap justify-center gap-2">
+            {popularSearches.map((tag) => (
+              <Link 
+                key={tag.slug} 
+                href={`/jobs?q=${encodeURIComponent(tag.name)}`}
+                className="px-4 py-1.5 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-indigo-200 dark:hover:border-indigo-500/50 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
+              >
+                {tag.name}
+              </Link>
+            ))}
+          </div>
         </div>
+
       </div>
     </section>
   );

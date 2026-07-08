@@ -2,8 +2,8 @@
 
 import React from "react";
 import PostCard from "./PostCard";
-import { BookOpen } from "lucide-react";
 import { useLanguage } from "@/lib/LanguageContext";
+import { Loader2 } from "lucide-react";
 
 interface PostGridProps {
   posts: any[];
@@ -15,23 +15,18 @@ export default function PostGrid({ posts, loading }: PostGridProps) {
 
   if (loading) {
     return (
-      <div className="w-full py-16 flex flex-col items-center justify-center gap-4">
-        <div className="w-10 h-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
-        <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium">{t("posts.loading")}</p>
+      <div className="w-full h-64 flex flex-col items-center justify-center gap-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl">
+        <Loader2 className="w-8 h-8 text-indigo-600 dark:text-indigo-400 animate-spin" />
+        <p className="text-zinc-500 dark:text-zinc-400 font-medium">{t("posts.loading") || "Loading..."}</p>
       </div>
     );
   }
 
   if (posts.length === 0) {
     return (
-      <div className="text-center py-20 bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/40 rounded-2xl p-8 flex flex-col items-center justify-center max-w-lg mx-auto">
-        <div className="w-16 h-16 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500 mb-5">
-          <BookOpen className="w-8 h-8" />
-        </div>
-        <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">{t("posts.noArticles")}</h3>
-        <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed">
-          {t("posts.noArticlesDesc")}
-        </p>
+      <div className="w-full py-20 flex flex-col items-center justify-center text-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl">
+        <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">{t("posts.noPostsTitle")}</h3>
+        <p className="text-zinc-500 dark:text-zinc-400 max-w-md">{t("posts.noPostsDesc")}</p>
       </div>
     );
   }

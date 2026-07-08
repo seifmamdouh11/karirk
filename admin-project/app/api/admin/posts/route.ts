@@ -31,6 +31,7 @@ export async function POST(req: Request) {
       {
         success: true,
         message: "Post created successfully",
+        post: newPost,
       },
       { status: 201 },
     );
