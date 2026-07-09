@@ -4,9 +4,28 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Briefcase, Save, AlertCircle, CheckCircle2, LayoutTemplate, Key, MapPin, Building2, Globe, DollarSign, Link as LinkIcon, FileText } from "lucide-react";
 import Link from "next/link";
-import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
-export default function EditJobClient({ initialJob }: { initialJob: any }) {
+type CategoryItem = { _id: string; name: string; slug: string };
+type CategoryWithSubcategories = CategoryItem & { subcategories: CategoryItem[] };
+
+type EditJobInput = {
+  _id: string;
+  title?: string;
+  company?: string;
+  location?: string;
+  country?: string;
+  type?: string;
+  salary?: string;
+  category?: string;
+  applyLink?: string;
+  status?: string;
+  description?: string;
+  slug?: string;
+};
+
+type ErrorLike = { response?: { data?: { error?: string; message?: string } } };
+
+export default function EditJobClient({ initialJob }: { initialJob: EditJobInput }) {
   const [formData, setFormData] = useState({
     title: initialJob.title || "",
     company: initialJob.company || "",
@@ -21,7 +40,7 @@ export default function EditJobClient({ initialJob }: { initialJob: any }) {
     secret: "",
   });
 
-  const [categories, setCategories] = useState<{ _id: string; name: string; slug: string; subcategories: any[] }[]>([]);
+  const [categories, setCategories] = useState<CategoryWithSubcategories[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -76,11 +95,12 @@ export default function EditJobClient({ initialJob }: { initialJob: any }) {
         setSuccess(true);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
+      const errorData = err as ErrorLike;
       setError(
-        err.response?.data?.error || 
-        err.response?.data?.message || 
+        errorData.response?.data?.error || 
+        errorData.response?.data?.message || 
         "Failed to update job. Please check your secret key and try again."
       );
       window.scrollTo({ top: 0, behavior: "smooth" });

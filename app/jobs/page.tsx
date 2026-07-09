@@ -9,6 +9,11 @@ import AdBanner from "@/components/layout/AdBanner";
 
 import { useLanguage } from "@/lib/LanguageContext";
 
+export const metadata = {
+  title: "Search Jobs in the Arab World | Karirak",
+  description: "Browse current full-time, part-time, remote, and hybrid job openings across the Arab world.",
+};
+
 function JobsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();

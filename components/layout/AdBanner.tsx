@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useLanguage } from "@/lib/LanguageContext";
 
 interface AdBannerProps {
   dataAdSlot: string;
@@ -16,8 +15,7 @@ export default function AdBanner({
   dataFullWidthResponsive = "true",
   className = ""
 }: AdBannerProps) {
-  const { t } = useLanguage();
-  const adRef = useRef<HTMLModElement>(null);
+  const adRef = useRef<HTMLElement | null>(null);
   const pushedRef = useRef(false);
   
   useEffect(() => {

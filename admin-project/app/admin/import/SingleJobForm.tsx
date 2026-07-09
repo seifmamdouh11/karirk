@@ -6,6 +6,16 @@ import { useRouter } from "next/navigation";
 import { Briefcase, Send, AlertCircle, CheckCircle2, LayoutTemplate, Key, MapPin, Building2, Globe, DollarSign, Link as LinkIcon, FileText } from "lucide-react";
 import Link from "next/link";
 
+type CategoryItem = { _id: string; name: string; slug: string };
+type CategoryWithSubcategories = CategoryItem & { subcategories: CategoryItem[] };
+
+type ErrorLike = { response?: { data?: { error?: string; message?: string } } };
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
+
 export default function SingleJobForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -22,11 +32,10 @@ export default function SingleJobForm() {
     secret: "",
   });
 
-  const [categories, setCategories] = useState<{ _id: string; name: string; slug: string; subcategories: any[] }[]>([]);
+  const [categories, setCategories] = useState<CategoryWithSubcategories[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [createdJobSlug, setCreatedJobSlug] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -38,7 +47,7 @@ export default function SingleJobForm() {
             setFormData(prev => ({ ...prev, category: res.data.data[0].slug }));
           }
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error("Failed to fetch categories:", err);
       }
     };
@@ -84,7 +93,6 @@ export default function SingleJobForm() {
           router.push(`/jobs/${slug}`);
         } else {
           setSuccess(true);
-          setCreatedJobSlug(null);
         }
         // Reset form
         setFormData(prev => ({
@@ -97,11 +105,13 @@ export default function SingleJobForm() {
         }));
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
+      const errorData = err as ErrorLike;
       setError(
-        err.response?.data?.error || 
-        err.response?.data?.message || 
+        errorData.response?.data?.error || 
+        errorData.response?.data?.message || 
+        getErrorMessage(err) ||
         "Failed to create job. Please check your secret key and try again."
       );
       window.scrollTo({ top: 0, behavior: "smooth" });

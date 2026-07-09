@@ -6,6 +6,10 @@ import Post from "@/models/Post";
 import Hero from "@/components/home/Hero";
 import HomeContent from "@/components/home/HomeContent";
 
+export const metadata = {
+  title: "Karirak | Jobs and Career Resources in the Arab World",
+  description: "Discover jobs, career insights, and industry categories across the Arab world on Karirak.",
+};
 
 export const dynamic = "force-dynamic";
 

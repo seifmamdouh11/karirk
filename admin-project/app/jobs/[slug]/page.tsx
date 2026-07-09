@@ -4,6 +4,21 @@ import Job from "@/models/Job";
 import Link from "next/link";
 import { ArrowLeft, Edit, Calendar, Tag, MapPin, Building2, DollarSign, Globe, ExternalLink } from "lucide-react";
 
+type AdminJobPreview = {
+  _id: string;
+  title: string;
+  company?: string;
+  status?: string;
+  type?: string;
+  createdAt?: string | Date;
+  location?: string;
+  salary?: string;
+  country?: string;
+  applyLink?: string;
+  category?: string;
+  slug?: string;
+};
+
 export const dynamic = "force-dynamic";
 
 interface Props {
@@ -14,7 +29,7 @@ export default async function JobPreviewPage({ params }: Props) {
   const { slug } = await params;
   await connectDB();
 
-  const job = await Job.findOne({ slug }).lean() as any;
+  const job = await Job.findOne({ slug }).lean() as AdminJobPreview | null;
   if (!job) notFound();
 
   const formattedDate = new Date(job.createdAt).toLocaleDateString("en-US", {

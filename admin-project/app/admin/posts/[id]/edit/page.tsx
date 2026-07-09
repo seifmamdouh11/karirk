@@ -16,12 +16,14 @@ export default async function EditPostPage({ params }: PageProps) {
   const { id } = await params;
   await connectDB();
 
+  let post;
   try {
-    const post = await Post.findById(id).lean();
-    if (!post) return notFound();
-    
-    return <EditPostClient initialPost={JSON.parse(JSON.stringify(post))} />;
+    post = await Post.findById(id).lean();
   } catch (error) {
+    console.error(error);
     return notFound();
   }
+
+  if (!post) return notFound();
+  return <EditPostClient initialPost={JSON.parse(JSON.stringify(post))} />;
 }

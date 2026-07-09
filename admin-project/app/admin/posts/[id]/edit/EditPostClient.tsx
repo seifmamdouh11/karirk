@@ -4,10 +4,22 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PenSquare, Save, AlertCircle, CheckCircle2, LayoutTemplate, Briefcase, Key } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-export default function EditPostClient({ initialPost }: { initialPost: any }) {
-  const router = useRouter();
+type CategoryItem = { _id: string; name: string; slug: string };
+type CategoryWithSubcategories = CategoryItem & { subcategories: CategoryItem[] };
+
+type EditPostInput = {
+  _id: string;
+  title?: string;
+  description?: string;
+  category?: string;
+  status?: string;
+  slug?: string;
+};
+
+type ErrorLike = { response?: { data?: { error?: string; message?: string } } };
+
+export default function EditPostClient({ initialPost }: { initialPost: EditPostInput }) {
   const [formData, setFormData] = useState({
     title: initialPost.title || "",
     description: initialPost.description || "",
@@ -16,7 +28,7 @@ export default function EditPostClient({ initialPost }: { initialPost: any }) {
     secret: "",
   });
 
-  const [categories, setCategories] = useState<{ _id: string; name: string; slug: string; subcategories: any[] }[]>([]);
+  const [categories, setCategories] = useState<CategoryWithSubcategories[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -65,11 +77,12 @@ export default function EditPostClient({ initialPost }: { initialPost: any }) {
         setSuccess(true);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
+      const errorData = err as ErrorLike;
       setError(
-        err.response?.data?.error || 
-        err.response?.data?.message || 
+        errorData.response?.data?.error || 
+        errorData.response?.data?.message || 
         "Failed to update post. Please check your secret key and try again."
       );
       window.scrollTo({ top: 0, behavior: "smooth" });

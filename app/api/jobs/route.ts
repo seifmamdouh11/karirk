@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 
     const total = await Job.countDocuments(filter);
 
-    let queryObj = Job.find(filter).sort({ createdAt: -1 });
+    const queryObj = Job.find(filter).sort({ createdAt: -1 });
 
     let jobs;
     if (featured === "true") {

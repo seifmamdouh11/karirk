@@ -24,6 +24,7 @@ export async function PUT(request:NextRequest,{
         }
         return Response.json({ job }, { status: 200 });
     } catch (error) {
+        console.error(error);
         return Response.json({ error: "Failed to update job" }, { status: 500 });
     }
 }   
@@ -46,6 +47,7 @@ export async function DELETE(request:NextRequest,{
         }
         return Response.json({ job }, { status: 200 });
     } catch (error) {
+        console.error(error);
         return Response.json({ error: "Failed to delete job" }, { status: 500 });
     }
 }

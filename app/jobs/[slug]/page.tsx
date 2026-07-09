@@ -2,11 +2,51 @@ import React from "react";
 import connectDB from "@/lib/mongodb";
 import Job from "@/models/Job";
 import Link from "next/link";
-import { ArrowLeft, MapPin, DollarSign, Calendar, Briefcase, Globe, ExternalLink } from "lucide-react";
+import { ArrowLeft, MapPin, DollarSign, Calendar, Globe, ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  await connectDB();
+
+  const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(slug);
+  const job = await Job.findOne(
+    isValidObjectId
+      ? { $or: [{ slug }, { _id: slug }] }
+      : { slug }
+  ).lean();
+
+  if (!job) {
+    return {
+      title: "Job Not Found - Karirak",
+      description: "The requested job listing was not found.",
+    };
+  }
+
+  const title = `${job.title} at ${job.company} | ${job.country} job on Karirak`;
+  const shortDescription = job.description
+    ? `${job.description.slice(0, 157).trim()}...`
+    : `Apply for ${job.title} at ${job.company} in ${job.country}.`;
+
+  return {
+    title,
+    description: shortDescription,
+    openGraph: {
+      title,
+      description: shortDescription,
+      type: "article",
+      siteName: "Karirak",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: shortDescription,
+    },
+  };
 }
 
 export const dynamic = "force-dynamic";

@@ -24,6 +24,7 @@ export async function GET(
       { status: 200 },
     );
   } catch (error) {
+    console.error("Failed to fetch post:", error);
     return NextResponse.json(
       {
         success: false,

@@ -8,10 +8,15 @@ import { Search, X, Filter } from "lucide-react";
 
 import { useLanguage } from "@/lib/LanguageContext";
 
+export const metadata = {
+  title: "Career Articles and Advice | Karirak",
+  description: "Read expert career advice, hiring tips, and industry insights for professionals in the Arab world.",
+};
+
 function PostsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { locale, t } = useLanguage();
+  const { t } = useLanguage();
 
   const initialQ = searchParams.get("q") || "";
   const initialCategory = searchParams.get("category") || "";

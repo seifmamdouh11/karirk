@@ -32,6 +32,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Karirak - Arab World Job Platform",
   description: "Find your dream job or hire the best talents in the Arab world.",
+  metadataBase: new URL("https://karirak.com"),
+  applicationName: "Karirak",
+  openGraph: {
+    type: "website",
+    title: "Karirak - Arab World Job Platform",
+    description: "Find your dream job or hire the best talents in the Arab world.",
+    siteName: "Karirak",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Karirak - Arab World Job Platform",
+    description: "Find your dream job or hire the best talents in the Arab world.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

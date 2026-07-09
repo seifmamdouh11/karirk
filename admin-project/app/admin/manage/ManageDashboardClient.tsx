@@ -5,11 +5,26 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { 
-  Key, Trash2, Edit, LayoutDashboard, Briefcase, FileText, 
+  Trash2, Edit, LayoutDashboard, Briefcase, FileText, 
   AlertCircle, Database, Activity, Plus, FileSpreadsheet, Lock, Unlock, ArrowUpRight, ArrowUp
 } from "lucide-react";
 
-export default function ManageDashboardClient({ initialJobs, initialPosts }: { initialJobs: any[], initialPosts: any[] }) {
+type AdminJob = {
+  _id: string;
+  title: string;
+  company?: string;
+  category?: string;
+  status?: string;
+};
+
+type AdminPost = {
+  _id: string;
+  title: string;
+  category?: string;
+  status?: string;
+};
+
+export default function ManageDashboardClient({ initialJobs, initialPosts }: { initialJobs: AdminJob[]; initialPosts: AdminPost[] }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"jobs" | "posts">("jobs");
   const [jobs, setJobs] = useState(initialJobs);
@@ -20,7 +35,7 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
 
   // 2-step Delete Confirmation State
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [confirmTimeout, setConfirmTimeout] = useState<any>(null);
+  const [confirmTimeout, setConfirmTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
@@ -124,8 +139,9 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
           setPosts(posts.filter(p => p._id !== id));
         }
       }
-    } catch (err: any) {
-      setError(err.response?.data?.error || err.response?.data?.message || "Failed to delete. Check your secret key.");
+    } catch (err: unknown) {
+      const errorData = err as { response?: { data?: { error?: string; message?: string } } };
+      setError(errorData.response?.data?.error || errorData.response?.data?.message || "Failed to delete. Check your secret key.");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setIsDeleting(null);

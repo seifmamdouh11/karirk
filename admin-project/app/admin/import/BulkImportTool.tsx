@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useRef, useCallback } from "react";
-import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
 // ── types ────────────────────────────────────────────────────────────────────
 type JobRow = {
@@ -75,7 +74,7 @@ export default function BulkImportTool() {
       if (!raw.length) { setParseError("No rows found in file."); return; }
       setRows(raw.map((d, i) => ({ index: i, data: d, errors: validateRow(d), included: true })));
       setStep(2);
-    } catch (e: any) { setParseError(`Parse error: ${e.message}`); }
+    } catch (e: unknown) { setParseError(`Parse error: ${getErrorMessage(e)}`); }
   }, []);
 
   const handleFile = (file: File) => {
@@ -109,7 +108,7 @@ export default function BulkImportTool() {
       if (!res.ok) { showToast(data.error ?? "Request failed.", "error"); setLoading(false); return; }
       setResult(data);
       setStep(3);
-    } catch (e: any) { showToast(e.message, "error"); }
+    } catch (e: unknown) { showToast(getErrorMessage(e), "error"); }
     finally { setLoading(false); }
   };
 
@@ -318,7 +317,7 @@ export default function BulkImportTool() {
 
             <div className="flex justify-center gap-4 mt-8">
               <button className="btn btn-primary" onClick={reset}>Import Another File</button>
-              <a href={getMainSiteUrl("/jobs")} className="btn btn-ghost" target="_blank">View Jobs →</a>
+              <a href="/admin/manage" className="btn btn-ghost">← Back to Dashboard</a>
             </div>
           </div>
         )}

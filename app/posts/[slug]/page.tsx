@@ -2,11 +2,46 @@ import React from "react";
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
 import Link from "next/link";
-import { ArrowLeft, Clock, BookOpen, Share2 } from "lucide-react";
+import { ArrowLeft, Clock, Share2 } from "lucide-react";
 import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  await connectDB();
+
+  const post = await Post.findOne({ slug }).lean();
+
+  if (!post) {
+    return {
+      title: "Article Not Found - Karirak",
+      description: "The requested article was not found.",
+    };
+  }
+
+  const title = `${post.title} | Karirak`;
+  const shortDescription = post.description
+    ? `${post.description.slice(0, 157).trim()}...`
+    : `Read this article on ${post.title}.`;
+
+  return {
+    title,
+    description: shortDescription,
+    openGraph: {
+      title,
+      description: shortDescription,
+      type: "article",
+      siteName: "Karirak",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: shortDescription,
+    },
+  };
 }
 
 export const dynamic = "force-dynamic";

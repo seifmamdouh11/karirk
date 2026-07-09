@@ -11,7 +11,6 @@ export default function Navbar() {
     const router = useRouter();
     const { locale, setLocale, t: translate } = useLanguage();
     
-    const [categories, setCategories] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<{ jobs: any[]; posts: any[] } | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -28,20 +27,6 @@ export default function Navbar() {
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await axios.get("/api/categories");
-                if (res.data && res.data.success) {
-                    setCategories(res.data.data);
-                }
-            } catch (err) {
-                console.error("Failed to fetch categories:", err);
-            }
-        };
-        fetchCategories();
     }, []);
 
     useEffect(() => {

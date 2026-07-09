@@ -4,6 +4,16 @@ import Post from "@/models/Post";
 import Link from "next/link";
 import { ArrowLeft, Edit, Calendar, Tag, FileText } from "lucide-react";
 
+type AdminPostPreview = {
+  _id: string;
+  title: string;
+  description?: string;
+  category?: string;
+  status?: string;
+  slug?: string;
+  createdAt?: string | Date;
+};
+
 export const dynamic = "force-dynamic";
 
 interface Props {
@@ -14,7 +24,7 @@ export default async function PostPreviewPage({ params }: Props) {
   const { slug } = await params;
   await connectDB();
 
-  const post = await Post.findOne({ slug }).lean() as any;
+  const post = await Post.findOne({ slug }).lean() as AdminPostPreview | null;
   if (!post) notFound();
 
   const formattedDate = new Date(post.createdAt).toLocaleDateString("en-US", {

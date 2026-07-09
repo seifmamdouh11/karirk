@@ -16,12 +16,14 @@ export default async function EditJobPage({ params }: PageProps) {
   const { id } = await params;
   await connectDB();
 
+  let job;
   try {
-    const job = await Job.findById(id).lean();
-    if (!job) return notFound();
-    
-    return <EditJobClient initialJob={JSON.parse(JSON.stringify(job))} />;
+    job = await Job.findById(id).lean();
   } catch (error) {
+    console.error(error);
     return notFound();
   }
+
+  if (!job) return notFound();
+  return <EditJobClient initialJob={JSON.parse(JSON.stringify(job))} />;
 }

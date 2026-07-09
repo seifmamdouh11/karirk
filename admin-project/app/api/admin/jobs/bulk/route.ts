@@ -12,7 +12,7 @@ const REQUIRED_FIELDS = [
   "company", "category", "country", "applyLink",
 ] as const;
 
-type JobRow = Record<string, string>;
+type JobRow = Record<string, string | undefined>;
 
 // Mirrors the slugify in Job model — insertMany skips pre-save hooks
 function slugify(text: string) {
@@ -43,12 +43,14 @@ function validateRow(row: JobRow) {
   return errors;
 }
 
-function extractWriteErrorMessage(we: any): string {
+function extractWriteErrorMessage(we: unknown): string {
+  if (!we || typeof we !== "object") return "Unknown write error";
+  const maybeObject = we as Record<string, unknown>;
   return (
-    we?.errmsg ??
-    we?.err?.message ??
-    we?.message ??
-    we?.writeError?.errmsg ??
+    (maybeObject.errmsg as string) ??
+    ((maybeObject.err as Record<string, unknown>)?.message as string) ??
+    (maybeObject.message as string) ??
+    ((maybeObject.writeError as Record<string, unknown>)?.errmsg as string) ??
     "Unknown write error"
   );
 }
@@ -108,10 +110,16 @@ export async function POST(request: NextRequest) {
           rawResult: true,
         });
         inserted = result.insertedCount ?? validJobs.length;
-      } catch (err: any) {
-        if (err.name === "MongoBulkWriteError") {
-          inserted = err.result?.nInserted ?? 0;
-          (err.writeErrors ?? []).forEach((we: any) => {
+      } catch (err: unknown) {
+        const bulkError = err as {
+          name?: string;
+          result?: { nInserted?: number };
+          writeErrors?: unknown[];
+        };
+
+        if (bulkError?.name === "MongoBulkWriteError") {
+          inserted = bulkError.result?.nInserted ?? 0;
+          (bulkError.writeErrors ?? []).forEach((we) => {
             insertErrors.push({
               message: `DB write error: ${extractWriteErrorMessage(we)}`,
             });

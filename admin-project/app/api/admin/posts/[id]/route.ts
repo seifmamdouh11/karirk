@@ -59,9 +59,10 @@ export async function PUT(
       },
       { status: 200 },
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error updating post:", error);
-    if (error.name === "ValidationError") {
+    const err = error as { name?: string; message?: string };
+    if (err.name === "ValidationError") {
       return NextResponse.json(
         {
           success: false,
