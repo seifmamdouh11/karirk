@@ -13,16 +13,14 @@ export const dynamic = 'force-dynamic';
 export default async function AdminManagePage() {
   await connectDB();
 
-  // Fetch jobs (limit to 100 for now or paginate later)
+  // Fetch all jobs
   const jobs = await Job.find()
     .sort({ createdAt: -1 })
-    .limit(100)
     .lean();
 
-  // Fetch posts
+  // Fetch all posts
   const posts = await Post.find()
     .sort({ createdAt: -1 })
-    .limit(100)
     .lean();
 
   const serializedJobs = JSON.parse(JSON.stringify(jobs));

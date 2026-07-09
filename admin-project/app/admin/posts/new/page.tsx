@@ -25,6 +25,7 @@ export default function AddPostPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [createdPostSlug, setCreatedPostSlug] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {

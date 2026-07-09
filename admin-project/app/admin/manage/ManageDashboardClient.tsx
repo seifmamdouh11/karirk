@@ -15,6 +15,7 @@ type AdminJob = {
   company?: string;
   category?: string;
   status?: string;
+  slug?: string;
 };
 
 type AdminPost = {
@@ -22,6 +23,7 @@ type AdminPost = {
   title: string;
   category?: string;
   status?: string;
+  slug?: string;
 };
 
 export default function ManageDashboardClient({ initialJobs, initialPosts }: { initialJobs: AdminJob[]; initialPosts: AdminPost[] }) {
@@ -32,6 +34,15 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
   const [secret, setSecret] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+
+  // Keep client state synchronized when the server props update
+  useEffect(() => {
+    setJobs(initialJobs);
+  }, [initialJobs]);
+
+  useEffect(() => {
+    setPosts(initialPosts);
+  }, [initialPosts]);
 
   // 2-step Delete Confirmation State
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -67,12 +78,12 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
 
-  const uniqueCategories = Array.from(
-    new Set([
-      ...jobs.map((j) => j.category),
-      ...posts.map((p) => p.category),
-    ].filter(Boolean))
-  );
+  const cats = ([
+    ...jobs.map((j) => j.category),
+    ...posts.map((p) => p.category),
+  ] as (string | undefined)[]).filter((c): c is string => !!c && c.length > 0);
+
+  const uniqueCategories = Array.from(new Set(cats));
 
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch = 

@@ -27,11 +27,14 @@ export default async function PostPreviewPage({ params }: Props) {
   const post = await Post.findOne({ slug }).lean() as AdminPostPreview | null;
   if (!post) notFound();
 
-  const formattedDate = new Date(post.createdAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const createdAtValue = post.createdAt ? new Date(post.createdAt as string | number | Date) : null;
+  const formattedDate = createdAtValue
+    ? createdAtValue.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "Unknown";
 
   return (
     <div className="min-h-screen bg-zinc-50">

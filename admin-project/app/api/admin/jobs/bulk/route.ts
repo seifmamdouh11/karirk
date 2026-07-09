@@ -79,23 +79,24 @@ export async function POST(request: NextRequest) {
     const rowErrors: { row: number; errors: string[] }[] = [];
 
     rows.forEach((row, i) => {
+      const get = (v?: string) => (v ? v.trim() : "");
       const errors = validateRow(row);
       if (errors.length > 0) {
         rowErrors.push({ row: i + 1, errors });
       } else {
         validJobs.push({
-          title: row.title.trim(),
-          description: row.description.trim(),
-          salary: row.salary.trim(),
-          type: row.type.toLowerCase().trim(),
-          company: row.company.trim(),
-          category: row.category.toLowerCase().trim(),
-          country: row.country.trim(),
-          applyLink: row.applyLink.trim(),
-          location: row.location?.trim() || "",
-          status: row.status?.trim() || "active",
+          title: get(row.title),
+          description: get(row.description),
+          salary: get(row.salary),
+          type: get(row.type).toLowerCase(),
+          company: get(row.company),
+          category: get(row.category).toLowerCase(),
+          country: get(row.country),
+          applyLink: get(row.applyLink),
+          location: get(row.location) || "",
+          status: get(row.status) || "active",
           // Must be generated here — insertMany skips pre-save hooks
-          slug: generateSlug(row.title, row.company),
+          slug: generateSlug(get(row.title), get(row.company)),
         });
       }
     });

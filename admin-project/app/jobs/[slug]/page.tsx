@@ -8,6 +8,7 @@ type AdminJobPreview = {
   _id: string;
   title: string;
   company?: string;
+  description?: string;
   status?: string;
   type?: string;
   createdAt?: string | Date;
@@ -32,11 +33,14 @@ export default async function JobPreviewPage({ params }: Props) {
   const job = await Job.findOne({ slug }).lean() as AdminJobPreview | null;
   if (!job) notFound();
 
-  const formattedDate = new Date(job.createdAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const createdAtValue = job.createdAt ? new Date(job.createdAt as string | number | Date) : null;
+  const formattedDate = createdAtValue
+    ? createdAtValue.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "Unknown";
 
   const typeColors: Record<string, string> = {
     "full-time": "bg-blue-50 text-blue-700 border-blue-200",
@@ -91,8 +95,8 @@ export default async function JobPreviewPage({ params }: Props) {
           {/* Job Header */}
           <div className="p-10 border-b border-zinc-100">
             <div className="flex flex-wrap items-center gap-3 mb-5">
-              <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border ${typeColors[job.type] || "bg-zinc-50 text-zinc-600 border-zinc-200"}`}>
-                {job.type}
+              <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border ${job.type ? typeColors[job.type] || "bg-zinc-50 text-zinc-600 border-zinc-200" : "bg-zinc-50 text-zinc-600 border-zinc-200"}`}>
+                {job.type || "Unknown"}
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-semibold">
                 <Tag className="w-3 h-3" />

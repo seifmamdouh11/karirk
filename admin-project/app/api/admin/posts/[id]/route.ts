@@ -66,7 +66,7 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          message: error.message,
+          message: err.message,
         },
         { status: 400 },
       );

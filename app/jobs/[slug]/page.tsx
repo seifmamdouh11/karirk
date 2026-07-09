@@ -67,6 +67,8 @@ export default async function JobDetailPage({ params }: PageProps) {
     notFound();
   }
 
+  const createdAt = job.createdAt ? new Date(job.createdAt as string | number | Date) : null;
+
   const typeLabels: Record<string, string> = {
     "full-time": "Full Time",
     "part-time": "Part Time",
@@ -151,7 +153,7 @@ export default async function JobDetailPage({ params }: PageProps) {
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-zinc-400" />
               <span>
-                Posted: {new Date(job.createdAt).toLocaleDateString(undefined, {
+                Posted: {new Date(job.createdAt ?? Date.now()).toLocaleDateString(undefined, {
                   month: "short",
                   day: "numeric",
                   year: "numeric"

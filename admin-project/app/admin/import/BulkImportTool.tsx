@@ -24,26 +24,91 @@ function validateRow(row: Partial<JobRow>): string[] {
 
 import Papa from "papaparse";
 
+const FIELD_ALIASES: Record<string, keyof JobRow> = {
+  title: "title",
+  description: "description",
+  salary: "salary",
+  type: "type",
+  company: "company",
+  category: "category",
+  country: "country",
+  applylink: "applyLink",
+  "apply link": "applyLink",
+  "apply_link": "applyLink",
+  location: "location",
+  status: "status",
+};
+
+function normalizeHeader(header: string): string {
+  return header.trim().toLowerCase().replace(/^["']|["']$/g, "").replace(/[_\s-]+/g, " ").trim();
+}
+
+function normalizeValue(value: string | undefined | null): string {
+  if (value == null) return "";
+  const trimmed = value.toString().trim().replace(/^"|"$/g, "");
+  if (trimmed.toLowerCase() === "undefined" || trimmed.toLowerCase() === "null") return "";
+  return trimmed;
+}
+
+function mapRowKeys(row: Record<string, string>): JobRow {
+  const mapped: Partial<JobRow> = {};
+
+  Object.entries(row).forEach(([key, value]) => {
+    const normalizedKey = normalizeHeader(key);
+    const alias = FIELD_ALIASES[normalizedKey] || FIELD_ALIASES[normalizedKey.replace(/\s+/g, "")] || null;
+    const normalizedValue = normalizeValue(value);
+
+    if (alias) {
+      mapped[alias] = normalizedValue;
+    } else if (key in mapped) {
+      mapped[key as keyof JobRow] = normalizedValue;
+    }
+  });
+
+  return {
+    title: mapped.title || "",
+    description: mapped.description || "",
+    salary: mapped.salary || "Not specified",
+    type: mapped.type || "",
+    company: mapped.company || "Unknown Company",
+    category: mapped.category || "",
+    country: mapped.country || "",
+    applyLink: mapped.applyLink || "",
+    location: mapped.location || "",
+    status: mapped.status || "active",
+  };
+}
+
 function parseCSV(text: string): JobRow[] {
   const parsed = Papa.parse<Record<string, string>>(text, {
     header: true,
     skipEmptyLines: true,
-    transformHeader: (h) => h?.trim().replace(/^"|"$/g, "") || "",
-    transform: (v) => (typeof v === "string" ? v.trim().replace(/^"|"$/g, "") : v),
+    transformHeader: (h) => normalizeHeader(h ?? ""),
+    transform: (v) => normalizeValue(v as string),
   });
 
   if (parsed.errors && parsed.errors.length > 0) {
-    // Throw the first error for the UI to show
-    throw new Error(parsed.errors.map(e => e.message || "CSV parse error").join("; "));
+    throw new Error(parsed.errors.map((e) => e.message || "CSV parse error").join("; "));
   }
 
-  // Ensure we return plain JobRow array
-  return (parsed.data || []) as unknown as JobRow[];
+  return (parsed.data || []).map((row) => mapRowKeys(row));
 }
 
 function parseJSON(text: string): JobRow[] {
   const data = JSON.parse(text);
-  return Array.isArray(data) ? data : data.jobs ?? [];
+  const rows = Array.isArray(data) ? data : data.jobs ?? [];
+  return rows.map((row: Record<string, unknown>) => {
+    const stringRow: Record<string, string> = {};
+    Object.entries(row).forEach(([key, value]) => {
+      stringRow[key] = value == null ? "" : String(value);
+    });
+    return mapRowKeys(stringRow);
+  });
+}
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  try { return String(error); } catch { return "Unknown error"; }
 }
 
 const CSV_TEMPLATE = `title,description,salary,type,company,category,country,applyLink,location,status
