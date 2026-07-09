@@ -85,6 +85,8 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
 
   const uniqueCategories = Array.from(new Set(cats));
 
+  const normalizeStatus = (status?: string) => status?.trim().toLowerCase() || "";
+
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch = 
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -92,7 +94,7 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
     const matchesCategory = 
       selectedCategory === "all" || job.category === selectedCategory;
     const matchesStatus = 
-      selectedStatus === "all" || job.status === selectedStatus;
+      selectedStatus === "all" || normalizeStatus(job.status) === selectedStatus;
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -102,7 +104,7 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
     const matchesCategory = 
       selectedCategory === "all" || post.category === selectedCategory;
     const matchesStatus = 
-      selectedStatus === "all" || post.status === selectedStatus;
+      selectedStatus === "all" || normalizeStatus(post.status) === selectedStatus;
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -324,7 +326,7 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
             <div className="space-y-2">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Active Jobs</span>
               <h3 className="text-3xl font-black text-zinc-900">
-                {jobs.filter(j => j.status === 'active').length}
+                {jobs.filter((j) => normalizeStatus(j.status) === 'active').length}
               </h3>
               <div className="flex items-center gap-1.5">
                 <span className="relative flex h-2 w-2">
@@ -490,12 +492,12 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
                     </td>
                     <td className="px-8 py-5">
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${
-                        job.status === "active" 
+                        normalizeStatus(job.status) === "active" 
                           ? "bg-emerald-50/80 text-emerald-700 border-emerald-200/60" 
                           : "bg-zinc-100 text-zinc-600 border-zinc-200/60"
                       }`}>
                         <span className={`h-1.5 w-1.5 rounded-full ${
-                          job.status === "active" ? "bg-emerald-500 animate-pulse" : "bg-zinc-400"
+                          normalizeStatus(job.status) === "active" ? "bg-emerald-500 animate-pulse" : "bg-zinc-400"
                         }`}></span>
                         {job.status}
                       </span>
