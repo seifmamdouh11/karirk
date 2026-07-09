@@ -15,7 +15,7 @@ export default function AdBanner({
   dataFullWidthResponsive = "true",
   className = ""
 }: AdBannerProps) {
-  const adRef = useRef<HTMLElement | null>(null);
+  const adRef = useRef<HTMLModElement | null>(null);
   const pushedRef = useRef(false);
   
   useEffect(() => {
