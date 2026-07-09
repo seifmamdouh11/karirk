@@ -25,6 +25,43 @@ export default function JobGrid({
   const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
   const NextIcon = isRtl ? ChevronLeft : ChevronRight;
 
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+
+      let start = Math.max(2, page - 1);
+      let end = Math.min(totalPages - 1, page + 1);
+
+      if (page <= 2) {
+        end = 3;
+      } else if (page >= totalPages - 1) {
+        start = totalPages - 2;
+      }
+
+      if (start > 2) {
+        pages.push("...");
+      }
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (end < totalPages - 1) {
+        pages.push("...");
+      }
+
+      pages.push(totalPages);
+    }
+    return pages;
+  };
+
   if (loading) {
     return (
       <div className="w-full h-64 flex flex-col items-center justify-center gap-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl">
@@ -68,14 +105,23 @@ export default function JobGrid({
           </button>
 
           <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, idx) => {
-              const pNum = idx + 1;
+            {getPageNumbers().map((pNum, idx) => {
+              if (pNum === "...") {
+                return (
+                  <span
+                    key={`ellipsis-${idx}`}
+                    className="flex items-center justify-center w-10 h-10 text-zinc-400 dark:text-zinc-500 font-medium select-none"
+                  >
+                    ...
+                  </span>
+                );
+              }
               const isActive = pNum === page;
               return (
                 <button
                   key={pNum}
-                  onClick={() => onPageChange(pNum)}
-                  className={`flex items-center justify-center w-10 h-10 rounded-xl font-medium transition-colors ${
+                  onClick={() => onPageChange(pNum as number)}
+                  className={`flex items-center justify-center w-10 h-10 rounded-xl font-medium transition-colors cursor-pointer ${
                     isActive 
                       ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20" 
                       : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-indigo-600 dark:hover:text-indigo-400"
