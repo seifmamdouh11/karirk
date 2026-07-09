@@ -10,7 +10,7 @@ export async function GET() {
     await connectDB();
     
     // Count active jobs
-    const activeJobsCount = await Job.countDocuments({ status: "active" });
+    const activeJobsCount = await Job.countDocuments({ status: { $regex: /^active$/i } });
     
     // Count total jobs
     const totalJobsCount = await Job.countDocuments({});

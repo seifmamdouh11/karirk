@@ -20,9 +20,9 @@ export default async function Home() {
   const categories = await Category.find().sort({ name: 1 }).lean();
   const parentCategories = categories.filter((c: any) => !c.parent);
 
-  const featuredJobs = await Job.find({ status: "active" }).sort({ createdAt: -1 }).limit(6).lean();
+  const featuredJobs = await Job.find({ status: { $regex: /^active$/i } }).sort({ createdAt: -1 }).limit(6).lean();
 
-  const posts = await Post.find({ status: "published" }).sort({ createdAt: -1 }).limit(6).lean();
+  const posts = await Post.find({ status: { $regex: /^published$/i } }).sort({ createdAt: -1 }).limit(6).lean();
 
   const serializedJobs = JSON.parse(JSON.stringify(featuredJobs));
   const serializedPosts = JSON.parse(JSON.stringify(posts));
