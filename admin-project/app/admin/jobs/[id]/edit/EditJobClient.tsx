@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Briefcase, Save, AlertCircle, CheckCircle2, LayoutTemplate, Key, MapPin, Building2, Globe, DollarSign, Link as LinkIcon, FileText } from "lucide-react";
 import Link from "next/link";
+import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
 export default function EditJobClient({ initialJob }: { initialJob: any }) {
   const [formData, setFormData] = useState({
@@ -132,6 +133,13 @@ export default function EditJobClient({ initialJob }: { initialJob: any }) {
             <div>
               <h3 className="font-semibold">Job Updated Successfully!</h3>
               <p className="text-sm text-emerald-700 mt-1">Changes have been saved to the database.</p>
+              <a 
+                href={getMainSiteUrl(`/jobs/${initialJob.slug || initialJob._id}`)}
+                target="_blank"
+                className="inline-block mt-3 text-sm font-medium text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition-colors"
+              >
+                View Job &rarr;
+              </a>
             </div>
           </div>
         )}

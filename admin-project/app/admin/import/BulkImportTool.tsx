@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useRef, useCallback } from "react";
+import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
 // ── types ────────────────────────────────────────────────────────────────────
 type JobRow = {
@@ -317,7 +318,7 @@ export default function BulkImportTool() {
 
             <div className="flex justify-center gap-4 mt-8">
               <button className="btn btn-primary" onClick={reset}>Import Another File</button>
-              <a href="/jobs" className="btn btn-ghost" target="_blank">View Jobs →</a>
+              <a href={getMainSiteUrl("/jobs")} className="btn btn-ghost" target="_blank">View Jobs →</a>
             </div>
           </div>
         )}

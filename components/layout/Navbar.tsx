@@ -240,6 +240,60 @@ export default function Navbar() {
                             className="w-full pl-9 pr-4 py-2.5 bg-zinc-100 dark:bg-zinc-900 border-transparent rounded-xl text-sm text-zinc-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                             placeholder={locale === 'en' ? "Search..." : "بحث..."}
                         />
+
+                        {/* Mobile Live Search Results Dropdown */}
+                        {searchQuery.trim() && (
+                            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-200/60 dark:border-zinc-800/80 overflow-hidden duration-200 z-50">
+                                {isSearchLoading ? (
+                                    <div className="p-4 flex items-center justify-center">
+                                        <div className="w-5 h-5 border-2 border-indigo-600/20 border-t-indigo-600 rounded-full animate-spin"></div>
+                                    </div>
+                                ) : searchResults ? (
+                                    <div className="max-h-[280px] overflow-y-auto p-2 flex flex-col gap-1">
+                                        {searchResults.jobs.length > 0 && (
+                                            <div className="mb-2">
+                                                <span className="px-3 py-1.5 text-[10px] font-bold text-zinc-400 opacity-80 uppercase tracking-wider block text-start">{locale === 'en' ? 'Jobs' : 'الوظائف'}</span>
+                                                {searchResults.jobs.map(job => (
+                                                    <Link 
+                                                        key={job._id} 
+                                                        href={`/jobs/${job.slug || job._id}`}
+                                                        onClick={() => { setSearchResults(null); setIsMobileMenuOpen(false); }}
+                                                        className="flex items-center px-3 py-2 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors group"
+                                                    >
+                                                        <div className="flex flex-col text-start">
+                                                            <span className="text-sm font-medium text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 line-clamp-1">{job.title}</span>
+                                                            <span className="text-xs text-zinc-500">{job.company}</span>
+                                                        </div>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {searchResults.posts.length > 0 && (
+                                            <div>
+                                                <span className="px-3 py-1.5 text-[10px] font-bold text-zinc-400 opacity-80 uppercase tracking-wider block text-start">{locale === 'en' ? 'Articles' : 'المقالات'}</span>
+                                                {searchResults.posts.map(post => (
+                                                    <Link 
+                                                        key={post._id} 
+                                                        href={`/posts/${post.slug || post._id}`}
+                                                        onClick={() => { setSearchResults(null); setIsMobileMenuOpen(false); }}
+                                                        className="flex items-center px-3 py-2 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors group"
+                                                    >
+                                                        <div className="flex flex-col text-start">
+                                                            <span className="text-sm font-medium text-zinc-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 line-clamp-1">{post.title}</span>
+                                                        </div>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {searchResults.jobs.length === 0 && searchResults.posts.length === 0 && (
+                                            <div className="p-4 text-center text-sm text-zinc-500">
+                                                {locale === 'en' ? 'No results found.' : 'لا توجد نتائج.'}
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : null}
+                            </div>
+                        )}
                     </div>
                     
                     <div className="flex flex-col space-y-1">

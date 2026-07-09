@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/lib/LanguageContext";
 import { Building2, Users, Globe2, Target, Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +8,30 @@ import Link from "next/link";
 export default function AboutPage() {
   const { locale, t } = useLanguage();
   const isRtl = locale === "ar";
+
+  const [stats, setStats] = useState({
+    jobsCount: "890+",
+    companiesCount: "450+",
+    talentsCount: "12K+",
+    countriesCount: "4+"
+  });
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.success && data.data) {
+          const d = data.data;
+          setStats({
+            jobsCount: d.jobsCount.toLocaleString(),
+            companiesCount: d.companiesCount.toLocaleString(),
+            talentsCount: d.talentsCount >= 1000 ? `${(d.talentsCount / 1000).toFixed(0)}K+` : d.talentsCount.toLocaleString(),
+            countriesCount: "4+"
+          });
+        }
+      })
+      .catch(err => console.error("Failed to load statistics:", err));
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-24">
@@ -32,10 +56,10 @@ export default function AboutPage() {
       {/* Stats/Feature Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { icon: Users, label: isRtl ? "مرشحين موثقين" : "Verified Candidates", value: "12K+" },
-          { icon: Building2, label: isRtl ? "شركات توظيف" : "Hiring Companies", value: "450+" },
-          { icon: Target, label: isRtl ? "فرص وظيفية" : "Career Opportunities", value: "890+" },
-          { icon: Globe2, label: isRtl ? "دول مدعومة" : "Countries Supported", value: "4+" },
+          { icon: Users, label: isRtl ? "مرشحين موثقين" : "Verified Candidates", value: stats.talentsCount },
+          { icon: Building2, label: isRtl ? "شركات توظيف" : "Hiring Companies", value: stats.companiesCount },
+          { icon: Target, label: isRtl ? "فرص وظيفية" : "Career Opportunities", value: stats.jobsCount },
+          { icon: Globe2, label: isRtl ? "دول مدعومة" : "Countries Supported", value: stats.countriesCount },
         ].map((stat, i) => (
           <div key={i} className="flex flex-col items-center text-center p-8 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
             <div className="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-6">

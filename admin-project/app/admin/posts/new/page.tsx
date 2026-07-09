@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PenSquare, Send, AlertCircle, CheckCircle2, LayoutTemplate, Briefcase, Key } from "lucide-react";
 import Link from "next/link";
+import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
 export default function AddPostPage() {
   const [formData, setFormData] = useState({
@@ -148,13 +149,13 @@ export default function AddPostPage() {
               <h3 className="font-semibold">Article Published Successfully!</h3>
               <p className="text-sm text-emerald-700 mt-1">Your article is now live on the platform.</p>
               {createdPostSlug && (
-                <Link 
-                  href={`/posts/${createdPostSlug}`}
+                <a 
+                  href={getMainSiteUrl(`/posts/${createdPostSlug}`)}
                   target="_blank"
                   className="inline-block mt-3 text-sm font-medium text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition-colors"
                 >
                   View Article &rarr;
-                </Link>
+                </a>
               )}
             </div>
           </div>

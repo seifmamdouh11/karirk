@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { getMainSiteUrl } from "@/lib/helpers/redirect";
 import { 
   Key, Trash2, Edit, LayoutDashboard, Briefcase, FileText, 
   AlertCircle, Database, Activity, Plus, FileSpreadsheet, Lock, Unlock, ArrowUpRight, ArrowUp
 } from "lucide-react";
 
 export default function ManageDashboardClient({ initialJobs, initialPosts }: { initialJobs: any[], initialPosts: any[] }) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"jobs" | "posts">("jobs");
   const [jobs, setJobs] = useState(initialJobs);
   const [posts, setPosts] = useState(initialPosts);
@@ -445,7 +448,11 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
               </thead>
               <tbody className="divide-y divide-zinc-100 font-medium">
                 {activeTab === "jobs" && filteredJobs.map((job) => (
-                  <tr key={job._id} className="hover:bg-zinc-50/50 transition-colors group cursor-pointer">
+                  <tr 
+                    key={job._id} 
+                    onClick={() => router.push(`/admin/jobs/${job._id}/edit`)}
+                    className="hover:bg-zinc-50/50 transition-colors group cursor-pointer"
+                  >
                     <td className="px-8 py-5">
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold text-zinc-900 group-hover:text-indigo-600 transition-colors">{job.title}</span>
@@ -469,9 +476,20 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex justify-end gap-2.5">
+                        <a
+                          href={getMainSiteUrl(`/jobs/${job.slug || job._id}`)}
+                          target="_blank"
+                          onClick={(e) => e.stopPropagation()}
+                          className="p-2 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all border border-transparent hover:border-indigo-200 cursor-pointer"
+                          title="View Live Job"
+                        >
+                          <ArrowUpRight className="w-4 h-4" />
+                        </a>
                         <Link
                           href={`/admin/jobs/${job._id}/edit`}
+                          onClick={(e) => e.stopPropagation()}
                           className="p-2 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all border border-transparent hover:border-indigo-200 cursor-pointer"
+                          title="Edit Job"
                         >
                           <Edit className="w-4 h-4" />
                         </Link>
@@ -498,7 +516,11 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
                 ))}
                 
                 {activeTab === "posts" && filteredPosts.map((post) => (
-                  <tr key={post._id} className="hover:bg-zinc-50/50 transition-colors group cursor-pointer">
+                  <tr 
+                    key={post._id} 
+                    onClick={() => router.push(`/admin/posts/${post._id}/edit`)}
+                    className="hover:bg-zinc-50/50 transition-colors group cursor-pointer"
+                  >
                     <td className="px-8 py-5">
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold text-zinc-900 group-hover:text-indigo-600 transition-colors">{post.title}</span>
@@ -522,9 +544,20 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex justify-end gap-2.5">
+                        <a
+                          href={getMainSiteUrl(`/posts/${post.slug || post._id}`)}
+                          target="_blank"
+                          onClick={(e) => e.stopPropagation()}
+                          className="p-2 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all border border-transparent hover:border-indigo-200 cursor-pointer"
+                          title="View Live Article"
+                        >
+                          <ArrowUpRight className="w-4 h-4" />
+                        </a>
                         <Link
                           href={`/admin/posts/${post._id}/edit`}
+                          onClick={(e) => e.stopPropagation()}
                           className="p-2 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all border border-transparent hover:border-indigo-200 cursor-pointer"
+                          title="Edit Article"
                         >
                           <Edit className="w-4 h-4" />
                         </Link>

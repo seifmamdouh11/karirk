@@ -5,6 +5,7 @@ import axios from "axios";
 import { PenSquare, Save, AlertCircle, CheckCircle2, LayoutTemplate, Briefcase, Key } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
 export default function EditPostClient({ initialPost }: { initialPost: any }) {
   const router = useRouter();
@@ -122,6 +123,13 @@ export default function EditPostClient({ initialPost }: { initialPost: any }) {
             <div>
               <h3 className="font-semibold">Article Updated Successfully!</h3>
               <p className="text-sm text-emerald-700 mt-1">Changes are now live.</p>
+              <a 
+                href={getMainSiteUrl(`/posts/${initialPost.slug || initialPost._id}`)}
+                target="_blank"
+                className="inline-block mt-3 text-sm font-medium text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition-colors"
+              >
+                View Article &rarr;
+              </a>
             </div>
           </div>
         )}

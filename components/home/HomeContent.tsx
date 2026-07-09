@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/LanguageContext";
 import FeaturedJobs from "./FeaturedJobs";
 import LatestPosts from "./LatestPosts";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, Sparkles, TrendingUp, Users, Building2, Briefcase, Percent } from "lucide-react";
 
 interface HomeContentProps {
   parentCategories: any[];
@@ -21,6 +21,30 @@ export default function HomeContent({
   const { locale, t } = useLanguage();
   const isRtl = locale === "ar";
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
+
+  const [stats, setStats] = useState({
+    jobsCount: "890+",
+    companiesCount: "450+",
+    talentsCount: "12K+",
+    matchQuality: "99.2%"
+  });
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.success && data.data) {
+          const d = data.data;
+          setStats({
+            jobsCount: d.jobsCount.toLocaleString(),
+            companiesCount: d.companiesCount.toLocaleString(),
+            talentsCount: d.talentsCount >= 1000 ? `${(d.talentsCount / 1000).toFixed(0)}K+` : d.talentsCount.toLocaleString(),
+            matchQuality: d.matchQuality
+          });
+        }
+      })
+      .catch(err => console.error("Failed to load statistics:", err));
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-32">
@@ -71,50 +95,98 @@ export default function HomeContent({
         </div>
 
         <aside className="w-full lg:w-[380px] shrink-0 space-y-8">
-          <div>
-            <span>
-              {locale === "ar" ? "إعلان / ممول" : "Sponsored / AD"}
-            </span>
-            <div>
-              <div>
-                {locale === "ar" ? "شريك مميز" : "Featured Partner"}
+          {/* Card 1: Premium Placements Ad */}
+          <div className="group relative overflow-hidden bg-gradient-to-br from-zinc-950 via-indigo-950 to-purple-950 text-white rounded-3xl p-8 border border-indigo-500/20 dark:border-indigo-500/30 hover:border-indigo-500/40 shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300">
+            {/* Background elements */}
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-indigo-500/30 transition-all duration-500"></div>
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-purple-500/30 transition-all duration-500"></div>
+            
+            {/* Shiny Grid pattern overlay */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none opacity-40"></div>
+            
+            <div className="relative space-y-6">
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 backdrop-blur-md text-[10px] font-extrabold uppercase tracking-wider text-indigo-300 border border-indigo-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping"></span>
+                  {locale === "ar" ? "إعلان / ممول" : "Sponsored / AD"}
+                </span>
+                <Sparkles className="w-5 h-5 text-indigo-400 group-hover:rotate-12 transition-transform duration-300" />
               </div>
-              <h3>
-                {locale === "ar"
-                  ? "سرّع رحلة بحثك عن عمل مع العروض المميزة"
-                  : "Accelerate Your Search with Premium Placements"}
-              </h3>
-              <p>
-                {locale === "ar"
-                  ? "أرسل سيرتك الذاتية مباشرة إلى مسؤولي التوظيف والموارد البشرية في السعودية والإمارات."
-                  : "Get your CV pushed directly to top recruiters and HR managers in Saudi Arabia and the UAE."}
-              </p>
-            </div>
-            <div>
-              <a href="#">
+
+              <div className="space-y-3">
+                <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest block">
+                  {locale === "ar" ? "شريك مميز" : "Featured Partner"}
+                </span>
+                <h3 className="text-xl font-extrabold leading-snug tracking-tight bg-gradient-to-r from-white via-zinc-100 to-indigo-200 bg-clip-text text-transparent">
+                  {locale === "ar"
+                    ? "سرّع رحلة بحثك عن عمل مع العروض المميزة"
+                    : "Accelerate Your Search with Premium Placements"}
+                </h3>
+                <p className="text-sm text-zinc-300 leading-relaxed font-medium">
+                  {locale === "ar"
+                    ? "أرسل سيرتك الذاتية مباشرة إلى مسؤولي التوظيف والموارد البشرية في السعودية والإمارات."
+                    : "Get your CV pushed directly to top recruiters and HR managers in Saudi Arabia and the UAE."}
+                </p>
+              </div>
+
+              <a 
+                href="#"
+                className="flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-bold text-sm shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+              >
                 <span>{locale === "ar" ? "أنشئ حسابا مميزا" : "Build Premium Profile"}</span>
+                <ArrowIcon className="w-4 h-4 transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
               </a>
             </div>
           </div>
 
-          <div>
-            <h3>{t("footer.explore")}</h3>
-            <div>
-              <div>
-                <span>12K+</span>
-                <span>{t("home.statsTalents")}</span>
+          {/* Card 2: explore statistics */}
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-8 shadow-sm space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                <TrendingUp className="w-5 h-5" />
               </div>
-              <div>
-                <span>450+</span>
-                <span>{t("home.statsCompanies")}</span>
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-white">
+                {t("footer.explore") || (locale === "ar" ? "استكشف" : "Explore")}
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-zinc-50 dark:bg-zinc-800/30 p-4 rounded-2xl border border-zinc-100/80 dark:border-zinc-800/60 hover:border-indigo-500/20 transition-all duration-300">
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 mb-1.5">
+                  <Users className="w-4 h-4" />
+                  <span className="text-xl font-black">{stats.talentsCount}</span>
+                </div>
+                <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 block leading-tight">
+                  {t("home.statsTalents")}
+                </span>
               </div>
-              <div>
-                <span>890+</span>
-                <span>{t("home.statsJobs")}</span>
+
+              <div className="bg-zinc-50 dark:bg-zinc-800/30 p-4 rounded-2xl border border-zinc-100/80 dark:border-zinc-800/60 hover:border-indigo-500/20 transition-all duration-300">
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 mb-1.5">
+                  <Building2 className="w-4 h-4" />
+                  <span className="text-xl font-black">{stats.companiesCount}</span>
+                </div>
+                <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 block leading-tight">
+                  {t("home.statsCompanies")}
+                </span>
               </div>
-              <div>
-                <span>99.2%</span>
-                <span>
+
+              <div className="bg-zinc-50 dark:bg-zinc-800/30 p-4 rounded-2xl border border-zinc-100/80 dark:border-zinc-800/60 hover:border-indigo-500/20 transition-all duration-300">
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 mb-1.5">
+                  <Briefcase className="w-4 h-4" />
+                  <span className="text-xl font-black">{stats.jobsCount}</span>
+                </div>
+                <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 block leading-tight">
+                  {t("home.statsJobs")}
+                </span>
+              </div>
+
+              <div className="bg-zinc-50 dark:bg-zinc-800/30 p-4 rounded-2xl border border-zinc-100/80 dark:border-zinc-800/60 hover:border-indigo-500/20 transition-all duration-300">
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 mb-1.5">
+                  <Percent className="w-4 h-4" />
+                  <span className="text-xl font-black">{stats.matchQuality}</span>
+                </div>
+                <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 block leading-tight">
                   {locale === "ar" ? "جودة التوافق" : "Match Quality"}
                 </span>
               </div>
