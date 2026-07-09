@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { getMainSiteUrl } from "@/lib/helpers/redirect";
 import { 
   Key, Trash2, Edit, LayoutDashboard, Briefcase, FileText, 
   AlertCircle, Database, Activity, Plus, FileSpreadsheet, Lock, Unlock, ArrowUpRight, ArrowUp
@@ -476,15 +475,14 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex justify-end gap-2.5">
-                        <a
-                          href={getMainSiteUrl(`/jobs/${job.slug || job._id}`)}
-                          target="_blank"
+                        <Link
+                          href={`/jobs/${job.slug || job._id}`}
                           onClick={(e) => e.stopPropagation()}
                           className="p-2 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all border border-transparent hover:border-indigo-200 cursor-pointer"
-                          title="View Live Job"
+                          title="Preview Job"
                         >
                           <ArrowUpRight className="w-4 h-4" />
-                        </a>
+                        </Link>
                         <Link
                           href={`/admin/jobs/${job._id}/edit`}
                           onClick={(e) => e.stopPropagation()}
@@ -544,15 +542,14 @@ export default function ManageDashboardClient({ initialJobs, initialPosts }: { i
                     </td>
                     <td className="px-8 py-5 text-right">
                       <div className="flex justify-end gap-2.5">
-                        <a
-                          href={getMainSiteUrl(`/posts/${post.slug || post._id}`)}
-                          target="_blank"
+                        <Link
+                          href={`/posts/${post.slug || post._id}`}
                           onClick={(e) => e.stopPropagation()}
                           className="p-2 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50/80 rounded-xl transition-all border border-transparent hover:border-indigo-200 cursor-pointer"
-                          title="View Live Article"
+                          title="Preview Article"
                         >
                           <ArrowUpRight className="w-4 h-4" />
-                        </a>
+                        </Link>
                         <Link
                           href={`/admin/posts/${post._id}/edit`}
                           onClick={(e) => e.stopPropagation()}
