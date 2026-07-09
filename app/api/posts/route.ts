@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const category = query.get("category");
 
     await connectDB();
-    const filter: any = { status: "published" };
+    const filter: any = {};
 
     if (category) {
       const catSlug = category.toLowerCase().trim();

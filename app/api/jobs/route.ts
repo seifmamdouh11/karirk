@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const featured = query.get("featured");
 
     await connectDB();
-    const filter: any = { status: "active" };
+    const filter: any = {};
 
     if (country) {
       filter.country = { $regex: new RegExp(`^${country}$`, "i") };
