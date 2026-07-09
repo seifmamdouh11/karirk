@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { Briefcase, Send, AlertCircle, CheckCircle2, LayoutTemplate, Key, MapPin, Building2, Globe, DollarSign, Link as LinkIcon, FileText } from "lucide-react";
 import Link from "next/link";
-import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
 export default function SingleJobForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     title: "",
     company: "",
@@ -25,6 +26,7 @@ export default function SingleJobForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [createdJobSlug, setCreatedJobSlug] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -76,7 +78,14 @@ export default function SingleJobForm() {
       );
 
       if (res.data && (res.data.job || res.status === 201)) {
-        setSuccess(true);
+        const slug = res.data.job?.slug;
+        if (slug) {
+          // Redirect to admin preview page
+          router.push(`/jobs/${slug}`);
+        } else {
+          setSuccess(true);
+          setCreatedJobSlug(null);
+        }
         // Reset form
         setFormData(prev => ({
           ...prev,
@@ -136,13 +145,12 @@ export default function SingleJobForm() {
           <div>
             <h3 className="font-semibold">Job Created Successfully!</h3>
             <p className="text-sm text-emerald-700 mt-1">Your job is now live on the platform.</p>
-            <a 
-              href={getMainSiteUrl("/jobs")}
-              target="_blank"
+            <Link
+              href="/admin/manage"
               className="inline-block mt-3 text-sm font-medium text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition-colors"
             >
-              View Jobs Board &rarr;
-            </a>
+              Back to Dashboard &rarr;
+            </Link>
           </div>
         </div>
       )}

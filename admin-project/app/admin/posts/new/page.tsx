@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { PenSquare, Send, AlertCircle, CheckCircle2, LayoutTemplate, Briefcase, Key } from "lucide-react";
 import Link from "next/link";
-import { getMainSiteUrl } from "@/lib/helpers/redirect";
 
 export default function AddPostPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -67,8 +68,14 @@ export default function AddPostPage() {
       );
 
       if (res.data && res.data.success) {
-        setSuccess(true);
-        setCreatedPostSlug(res.data.post.slug);
+        const slug = res.data.post?.slug;
+        if (slug) {
+          // Redirect to admin preview page
+          router.push(`/posts/${slug}`);
+        } else {
+          setSuccess(true);
+          setCreatedPostSlug(res.data.post?.slug || null);
+        }
         // Reset form except secret
         setFormData(prev => ({
           ...prev,
@@ -148,15 +155,12 @@ export default function AddPostPage() {
             <div>
               <h3 className="font-semibold">Article Published Successfully!</h3>
               <p className="text-sm text-emerald-700 mt-1">Your article is now live on the platform.</p>
-              {createdPostSlug && (
-                <a 
-                  href={getMainSiteUrl(`/posts/${createdPostSlug}`)}
-                  target="_blank"
-                  className="inline-block mt-3 text-sm font-medium text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition-colors"
-                >
-                  View Article &rarr;
-                </a>
-              )}
+              <Link
+                href="/admin/manage"
+                className="inline-block mt-3 text-sm font-medium text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition-colors"
+              >
+                Back to Dashboard &rarr;
+              </Link>
             </div>
           </div>
         )}
