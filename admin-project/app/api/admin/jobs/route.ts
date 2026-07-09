@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
             salary: body.salary?.trim(),
             company: body.company?.trim(),
             location: body.location?.trim(),
-            status: body.status?.trim(),
+            status: body.status?.trim() || "active",
             applyLink: body.applyLink?.trim(),
         });
         await job.save();
