@@ -33,7 +33,7 @@ const PostSchema = new mongoose.Schema(
         message: "Category '{VALUE}' does not exist.",
       },
     },
-    status: { type: String, enum: ["draft", "published"], default: "draft" },
+    status: { type: String, enum: ["draft", "published"], default: "published" },
   },
   {
     timestamps: true,

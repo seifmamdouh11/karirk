@@ -23,7 +23,7 @@ const jobSchema = new Schema({
     company: { type: String, required: true },
     category: { type: String, required: true, lowercase: true, trim: true },
     country: { type: String, required: true },
-    status: { type: String, default: "pending" },
+    status: { type: String, default: "active" },
     applyLink: { type: String, required: true },
 }, {
     timestamps: true
