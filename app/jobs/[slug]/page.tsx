@@ -149,11 +149,11 @@ export default async function JobDetailPage({ params }: PageProps) {
             <Globe className="w-4 h-4 text-zinc-400" />
             <span>{job.country}</span>
           </div>
-          {job.createdAt && (
+          {createdAt && (
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-zinc-400" />
               <span>
-                Posted: {new Date(job.createdAt ?? Date.now()).toLocaleDateString(undefined, {
+                Posted: {createdAt.toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
                   year: "numeric"
