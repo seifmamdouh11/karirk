@@ -21,10 +21,23 @@ export async function generateMetadata({ params }: PageProps) {
   if (!categoryDoc) {
     return { title: "Category Not Found - Karirak" };
   }
-  
+  const title = `${categoryDoc.name} Jobs - Karirak`;
+  const description = `Browse open vacancies and career pathways in the ${categoryDoc.name} industry.`;
+
   return {
-    title: `${categoryDoc.name} Jobs - Karirak`,
-    description: `Browse open vacancies and career pathways in the ${categoryDoc.name} industry.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      siteName: "Karirak",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
